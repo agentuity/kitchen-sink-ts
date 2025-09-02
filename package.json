@@ -1,0 +1,36 @@
+{
+  "name": "kitchen-sink-ts",
+  "description": "A demo project that showcases all of Agentuity's SDK functionality",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "agentuity build",
+    "dev": "agentuity dev",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "prestart": "agentuity bundle",
+    "start": "bun run .agentuity/index.js"
+  },
+  "keywords": [
+    "agentuity",
+    "agent",
+    "ai",
+    "ai agent",
+    "bun"
+  ],
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@types/bun": "^1.2.21"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@agentuity/sdk": "^0.0.144",
+    "@ai-sdk/openai": "^2.0.23",
+    "ai": "^5.0.29"
+  },
+  "module": "index.ts"
+}
