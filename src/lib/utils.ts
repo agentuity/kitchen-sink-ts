@@ -56,9 +56,11 @@ export const handleHelpMessage = async (
     return new Response('Internal Server Error', { status: 500 });
   }
 
-  const result = await streamText({
-    model: openai('gpt-5-mini'),
-    system: `
+  // Respond to the user's request
+  try {
+    const result = await streamText({
+      model: openai('gpt-5-mini'),
+      system: `
       ## You
 
       You are a developer evangelist that knows a lot about software development for AI agents, and specifically the Agentuity cloud platform and it's features.
@@ -88,10 +90,15 @@ export const handleHelpMessage = async (
 
       ${agentuityDocs}
     `,
-    prompt: `Tell me about the following Agentuity cloud platform feature: ${topic}`,
-  });
+      prompt: `Tell me about the following Agentuity cloud platform feature: ${topic}`,
+    });
 
-  return resp.stream(result.textStream, 'text/markdown');
+    return resp.stream(result.textStream, 'text/markdown');
+  } catch (error) {
+    ctx.logger.error('Error responding to user:', error);
+
+    return new Response('Internal Server Error', { status: 500 });
+  }
 };
 
 export const replaceCircularReferences = () => {
