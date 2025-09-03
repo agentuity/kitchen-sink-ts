@@ -85,3 +85,9 @@ agents:
   - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
     name: storage-object-store
     description: Demonstrates how to use the Object Store
+  - id: agent_36dfa1cde175f6021775244b45919046
+    name: gateway-provider
+    description: Demonstrates how to use multiple LLM providers through the AI Gateway
+  - id: agent_a0537aa43439eaab3ff81b118b4ca70e
+    name: gateway-byo-token
+    description: Demonstrates the ability to bring-your-own-token instead of utilizing the AI Gateway

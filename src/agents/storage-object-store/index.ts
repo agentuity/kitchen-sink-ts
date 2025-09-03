@@ -68,7 +68,7 @@ export default async function Agent(
   // Store image file
   if (content === 'Test Image File') {
     try {
-      const file = Bun.file('./src/test-files/test.png');
+      const file = Bun.file('./src/lib/test-files/test.png');
       const fileContent = await file.arrayBuffer();
 
       try {
