@@ -138,7 +138,7 @@ export default async function Agent(
     }
   }
 
-  return resp.text('You sent an empty message.');
+  return resp.text('You sent an invalid message.');
 }
 
 export const welcome = () => {
