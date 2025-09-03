@@ -21,7 +21,7 @@
   ],
   "private": true,
   "devDependencies": {
-    "@biomejs/biome": "^2.2.2",
+    "@biomejs/biome": "2.2.2",
     "@types/bun": "^1.2.21"
   },
   "peerDependencies": {
@@ -30,7 +30,8 @@
   "dependencies": {
     "@agentuity/sdk": "^0.0.144",
     "@ai-sdk/openai": "^2.0.23",
-    "ai": "^5.0.29"
+    "ai": "^5.0.29",
+    "source-map-js": "^1.2.1"
   },
   "module": "index.ts"
 }

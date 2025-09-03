@@ -79,3 +79,9 @@ agents:
     name: kitchen-sink
     # The description of the Agent which is editable
     description: Overview agent
+  - id: agent_5aed4255f2e621dc79b5423836f960df
+    name: storage-key-value
+    description: Demonstrates how to use the Key-Value store
+  - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
+    name: storage-object-store
+    description: Demonstrates how to use the Object Store
