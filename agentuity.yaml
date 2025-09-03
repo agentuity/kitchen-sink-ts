@@ -79,24 +79,75 @@ agents:
     name: kitchen-sink
     # The description of the Agent which is editable
     description: Overview agent
+  - id: agent_3edb0dc39f4c6df9623b3b0473201648
+    name: handler-request
+    description: Demonstrates how to use the request in the agent handler
+  - id: agent_a2d37fcdd47a1df58c621022909932ba
+    name: handler-response
+    description: Demonstrates how to use the response in the agent handler
+  - id: agent_d5f02d25b74b27c9355496b375b74e54
+    name: handler-context
+    description: Demonstrates how to use the context in the agent handler
   - id: agent_82fcaaf882776fc25bee8bdddd58a56f
     name: frameworks-provider
     description: Demonstrates how to use multiple framework providers
-  - id: agent_a9a95d9f3449132c9e5054e3f56d1c18
-    name: io-agent
-    description: Demonstrates using the Agent-to-Agent IO
   - id: agent_36dfa1cde175f6021775244b45919046
     name: gateway-provider
     description: Demonstrates how to use multiple LLM providers through the AI Gateway
   - id: agent_a0537aa43439eaab3ff81b118b4ca70e
     name: gateway-byo-token
     description: Demonstrates the ability to bring-your-own-token instead of utilizing the AI Gateway
+  - id: agent_a9a95d9f3449132c9e5054e3f56d1c18
+    name: io-agent
+    description: Demonstrates using the Agent-to-Agent IO
+  - id: agent_b61035c3341ac311663fad947c57eb7e
+    name: io-api
+    description: Demonstrates using the API IO
+  - id: agent_488533727acc40a87edf80e8f16c3e7a
+    name: io-cron
+    description: Demonstrates using the Cron IO
+  - id: agent_ed67ba4cf89e4e46d3e9a54c127b9bf1
+    name: io-email
+    description: Demonstrates using the Email IO
+  - id: agent_ec172a94fefa741a46e5c1882f39dc99
+    name: io-sms
+    description: Demonstrates using the SMS IO
+  - id: agent_b45feaf99bbdb042b3e8838c8544abe7
+    name: io-webhook
+    description: Demonstrates using the Webhook IO
   - id: agent_5aed4255f2e621dc79b5423836f960df
     name: storage-key-value
     description: Demonstrates how to use the Key-Value store
   - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
     name: storage-object-store
     description: Demonstrates how to use the Object Store
+  - id: agent_8f0d81ed71a781a684dad2d507e3f4e4
+    name: storage-vector
+    description: Demonstrates how to use the Vector store
+  - id: agent_8e2a2723183726da9a7c9902582f91ed
+    name: observability-logging
+    description: Demonstrates how to use the context logger
+  - id: agent_f265049c16381601c6d8d4e654caff7e
+    name: observability-tracing
+    description: Demonstrates how to use the context tracing
+  - id: agent_f7d8cd2397865355efd0eb21d54f726f
+    name: example-chat
+    description: Demonstrates how to create a standard chatbot-style agent
+  - id: agent_2ddc01490cd360ec3d1d594999bda18e
+    name: example-slack
+    description: Demonstrates how to integrate with a Slack bot
+  - id: agent_f3ac103e3f989bbadfe5a54bb7dd95f7
+    name: example-microsoft-teams
+    description: Demonstrates how to integrate with a Microsoft Teams bot
+  - id: agent_0478e40d5b58b63070bf948f68f3c3a5
+    name: example-discord
+    description: Demonstrates how to integrate with a Discord bot
+  - id: agent_0d0bd733f6b691a1768b8f45f35ff4ea
+    name: example-telegram
+    description: Demonstrates how to integrate with a Telegram bot
+  - id: agent_ea8541efc22cee1ba53bb03f18324a9e
+    name: example-composio
+    description: Demonstrates how to integrate with the Composio tool bridge
   - id: agent_fee72e13a3fdc7f0783abd65220d352d
     name: test-suite
     description: Tests the functionality of all Kitchen Sink example agents
