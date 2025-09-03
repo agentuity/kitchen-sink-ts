@@ -69,7 +69,7 @@ export default async function Agent(
   // Fetch from agents with public access, via webhook or API
   if (content === 'Fetch') {
     // TODO: Add a public API to a sample agent and demonstrate fetching
-    return resp.text('Fetch is not yet implemented', 'text/plain');
+    return resp.text('Fetch is not yet implemented');
 
     // const response = await fetch('https://agentuity.ai/api/123abc', {
     //   method: 'POST',
@@ -81,6 +81,8 @@ export default async function Agent(
 
     // return resp.text(await response.text(), 'text/markdown');
   }
+
+  return resp.text('You sent an invalid message.');
 }
 
 export const welcome = () => {
@@ -95,10 +97,10 @@ export const welcome = () => {
         data: `Run`,
         contentType: 'text/plain',
       },
-      {
-        data: `Public Agent`,
-        contentType: 'text/plain',
-      },
+      // {
+      //   data: `Public Agent`,
+      //   contentType: 'text/plain',
+      // },
     ],
   };
 };

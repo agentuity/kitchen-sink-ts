@@ -97,3 +97,6 @@ agents:
   - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
     name: storage-object-store
     description: Demonstrates how to use the Object Store
+  - id: agent_fee72e13a3fdc7f0783abd65220d352d
+    name: test-suite
+    description: Tests the functionality of all Kitchen Sink example agents
