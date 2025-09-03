@@ -68,13 +68,13 @@ export default async function Agent(
   // Store image file
   if (content === 'Image') {
     try {
-      const file = Bun.file('./src/lib/test-files/test.png');
+      const file = Bun.file('./src/lib/test-image.png');
       const fileContent = await file.arrayBuffer();
 
       try {
         await ctx.objectstore.put(bucket, key, fileContent, {
           contentType: 'image/png', // optional
-          contentDisposition: 'attachment; filename="test.png"', // optional
+          contentDisposition: 'attachment; filename="test-image.png"', // optional
         });
       } catch (_error) {
         return resp.text(
