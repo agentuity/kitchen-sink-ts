@@ -25,7 +25,7 @@ export default async function Agent(
   const content = await req.data.text();
 
   // Store plain-text content
-  if (content === 'Test Plain-Text') {
+  if (content === 'Plain-Text') {
     try {
       try {
         await ctx.objectstore.put(bucket, key, 'Hello, world!', {
@@ -66,7 +66,7 @@ export default async function Agent(
   }
 
   // Store image file
-  if (content === 'Test Image File') {
+  if (content === 'Image') {
     try {
       const file = Bun.file('./src/lib/test-files/test.png');
       const fileContent = await file.arrayBuffer();
@@ -143,14 +143,14 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Object Store</span> example agent.\n\n### About\n\nObject storage is your solution for storing files, media, and large unstructured data that agents need to manage. Think of it as your agent's file system — perfect for documents, images, videos, backups, and any binary content.\n\n### Testing\n\nChoose one of the pre-set message options and we'll store it, retrieve it, delete it, and return the value in a response to you.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Object Store</span> example agent.\n\n### About\n\nObject storage is your solution for storing files, media, and large unstructured data that agents need to manage. Think of it as your agent's file system — perfect for documents, images, videos, backups, and any binary content.\n\n### Testing\n\nChoose one of the pre-set message options and we'll store it, retrieve it, delete it, and return the value in a response to you. If you choose "Public URL", we'll provide a link you can use to access the file.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
     prompts: [
       {
-        data: `Test Plain-Text`,
+        data: `Plain-Text`,
         contentType: 'text/plain',
       },
       {
-        data: `Test Image File`,
+        data: `Image`,
         contentType: 'text/plain',
       },
       {
