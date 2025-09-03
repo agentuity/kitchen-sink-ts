@@ -38,19 +38,26 @@ export default async function Agent(
     { name: 'storage-object-store', welcome: welcomeStorageObjectStore },
   ];
 
+  let currentAgent = '';
+  let currentPrompt = 0;
+
   try {
     for (const agent of agents) {
+      currentAgent = agent.name;
       const instance = await ctx.getAgent({ name: agent.name });
       const prompts = agent.welcome().prompts;
 
       for (const prompt of prompts) {
+        currentPrompt = prompts.indexOf(prompt);
         await instance.run(prompt);
       }
     }
 
     return resp.text('Test completed successfully');
   } catch (error) {
-    ctx.logger.error('Test failed', error);
+    ctx.logger.error(
+      `Test failed while running "${currentAgent}" on prompt #${currentPrompt}\n\n${error}`
+    );
 
     return new Response('Internal Server Error', { status: 500 });
   }
