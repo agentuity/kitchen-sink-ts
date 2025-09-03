@@ -1,5 +1,5 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
-import { detectHelpMessage } from '../../lib/utils';
+import { handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
   req: AgentRequest,
@@ -10,7 +10,7 @@ export default async function Agent(
    * Boilerplate *
    ***************/
 
-  const help = await detectHelpMessage(req, resp);
+  const help = await handleHelpMessage(req, resp, ctx, 'key-value storage');
 
   if (help) {
     return help;

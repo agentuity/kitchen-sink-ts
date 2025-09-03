@@ -79,15 +79,21 @@ agents:
     name: kitchen-sink
     # The description of the Agent which is editable
     description: Overview agent
-  - id: agent_5aed4255f2e621dc79b5423836f960df
-    name: storage-key-value
-    description: Demonstrates how to use the Key-Value store
-  - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
-    name: storage-object-store
-    description: Demonstrates how to use the Object Store
+  - id: agent_82fcaaf882776fc25bee8bdddd58a56f
+    name: frameworks-provider
+    description: Demonstrates how to use multiple framework providers
+  - id: agent_a9a95d9f3449132c9e5054e3f56d1c18
+    name: io-agent
+    description: Demonstrates using the Agent-to-Agent IO
   - id: agent_36dfa1cde175f6021775244b45919046
     name: gateway-provider
     description: Demonstrates how to use multiple LLM providers through the AI Gateway
   - id: agent_a0537aa43439eaab3ff81b118b4ca70e
     name: gateway-byo-token
     description: Demonstrates the ability to bring-your-own-token instead of utilizing the AI Gateway
+  - id: agent_5aed4255f2e621dc79b5423836f960df
+    name: storage-key-value
+    description: Demonstrates how to use the Key-Value store
+  - id: agent_5fa4d2de738b0ec0a1f81c99521ad0c6
+    name: storage-object-store
+    description: Demonstrates how to use the Object Store

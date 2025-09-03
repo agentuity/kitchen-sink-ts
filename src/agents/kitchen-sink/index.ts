@@ -12,13 +12,18 @@ import {
   type UserModelMessage,
 } from 'ai';
 import { z } from 'zod';
-// import { replaceCircularReferences } from '../../lib/utils';
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Kitchen Sink</span> project, a showcase of Agentuity's SDK functionality. You can ask me questions about Agentuity, the SDK, or specific agents within the project.\n\nTo get started, select an agent to run. If this is your first time here, start with the <span style="color: light-dark(#0AA, #0FF);">Handler</span> agents.\n\n### Questions?\n\nYou can chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent, or find out more about specific features by sending "help" as plain-text to one of our other agents.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Kitchen Sink</span> project, a showcase of Agentuity's SDK functionality. You can ask me questions about Agentuity, the SDK, or specific agents within the project.\n\nTo get started, select an agent to run. If this is your first time here, start with the <span style="color: light-dark(#0AA, #0FF);">Handler</span> agents.\n\n### Questions?\n\nYou can chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent, or find out more about specific features by sending "help" as plain-text to one of the other agents.`,
   };
 };
+
+/*
+ * NOTE:
+ * This code for the Kitchen Sink agent is used to enable specific DevMode functionality
+ * You can still reference it, but it's not super relevant to building your own agents
+ */
 
 type Message = UserModelMessage | AssistantModelMessage;
 
@@ -34,37 +39,26 @@ export default async function Agent(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
-  let requestingAgent = null;
   let messages: Message[] = [];
 
-  if (req.trigger === 'agent') {
-    // Handle incoming "Help" requests from other agents
-    const agentId = req.metadata.headers?.tracestate
-      ?.split(',')
-      .find((pair) => pair.startsWith('id='))
-      ?.split('=')[1];
+  // Retrieve chat history and add user message
+  try {
+    const chatHistory = await ctx.kv.get(
+      'kitchen-sink',
+      `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`
+    );
 
-    requestingAgent = (await ctx.getAgent({ id: agentId! })).name;
-  } else {
-    // Retrieve chat history and add user message
-    try {
-      const chatHistory = await ctx.kv.get(
-        'kitchen-sink',
-        `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`
-      );
-
-      if (chatHistory.exists) {
-        messages = (await chatHistory.data.json()) as Message[];
-      }
-    } catch (error) {
-      ctx.logger.error('Error retrieving chat history:', error);
+    if (chatHistory.exists) {
+      messages = (await chatHistory.data.json()) as Message[];
     }
-
-    messages.push({
-      role: 'user',
-      content: await req.data.text(),
-    });
+  } catch (error) {
+    ctx.logger.error('Error retrieving chat history:', error);
   }
+
+  messages.push({
+    role: 'user',
+    content: await req.data.text(),
+  });
 
   // Retrieve the latest Agentuity docs and store them in a KV cache (1 day TTL)
   let agentuityDocs: string | undefined | Data;
@@ -101,17 +95,7 @@ export default async function Agent(
       system: `
         You are a developer evangelist that knows a lot about software development for AI agents, and specifically the Agentuity cloud platform.
 
-        ${
-          requestingAgent
-            ? `
-            The user is asking a question specifically about: ${requestingAgent.split('-').slice(1).join('-')}
-
-            Provide the user with an overview of the feature they're asking about. Do NOT offer to have a conversation with the user, you are acting like a CLI "--help" command. You should end the conversation by telling the user they can have a conversation with our expert agent by selecting the "kitchen-sink" agent, under an H2 heading of "Have more questions?".
-          `
-            : `
-            Your goal is to provide the user with relevant, contextual, accurate, and helpful information. If you don't know the answer, ask follow-up questions to help you understand the user's question better. You should only source your answers from the Agentuity Documentation; do NOT make up information, or infer from anything outside of the Agentuity Documentation.
-          `
-        }
+        Your goal is to provide the user with relevant, contextual, accurate, and helpful information. If you don't know the answer, ask follow-up questions to help you understand the user's question better. You should only source your answers from the Agentuity Documentation; do NOT make up information, or infer from anything outside of the Agentuity Documentation.
 
         Your response should be in markdown format.
 
@@ -159,7 +143,7 @@ export default async function Agent(
             Your goal is to reduce the number of tokens in the conversation history to the smallest possible number, IMPORTANTLY, while preserving the intent of the conversation.
         
             Start the message with the following: "# Conversation History Summary"
-            `,
+          `,
           messages,
           schema: z.object({
             messages: z.array(

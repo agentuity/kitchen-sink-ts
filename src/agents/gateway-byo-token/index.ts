@@ -1,7 +1,7 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { createOpenAI } from '@ai-sdk/openai';
 import { streamText } from 'ai';
-import { detectHelpMessage } from '../../lib/utils';
+import { handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
   req: AgentRequest,
@@ -12,7 +12,12 @@ export default async function Agent(
    * Boilerplate *
    ***************/
 
-  const help = await detectHelpMessage(req, resp);
+  const help = await handleHelpMessage(
+    req,
+    resp,
+    ctx,
+    'bring-your-own LLM API token'
+  );
 
   if (help) {
     return help;
@@ -53,7 +58,7 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">AI Gateway Bring-Your-Own-Token</span> example agent.\n\n### About\n\nThe AI Gateway provides seamless access to multiple AI providers through a single interface. It automatically routes your LLM requests, tracks usage and costs, and eliminates the need to manage individual API keys for each provider.\n\nYou can, however, choose to _bring your own token_ instead of utilizing the AI Gateway. This allows you to use your own API keys for the AI providers, but means you won't have access to the same features as the AI Gateway, such as tracing and usage metrics.\n\n### Testing\n\nStart by saving your OpenAI API key in your .env file(s).\n\nThen send a plain-text message with any content and we'll show you the response.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">AI Gateway Bring-Your-Own-Token</span> example agent.\n\n### About\n\nThe AI Gateway provides seamless access to multiple AI providers through a single interface. It automatically routes your LLM requests, tracks usage and costs, and eliminates the need to manage individual API keys for each provider.\n\nYou can, however, choose to _bring your own token_ instead of utilizing the AI Gateway. This allows you to use your own API keys for the AI providers, but means you won't have access to the same features as the AI Gateway, such as tracing and usage metrics.\n\n### Testing\n\nStart by saving your OpenAI API key in your .env file(s). Make sure to remove the key from your .env file when you're done testing and want to go back to using the AI Gateway.\n\nThen send a plain-text message with any content and we'll show you the response.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
     prompts: [
       {
         data: `Tell me a short story about AI agents`,

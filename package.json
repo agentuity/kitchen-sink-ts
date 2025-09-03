@@ -31,6 +31,7 @@
     "@agentuity/sdk": "^0.0.144",
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
+    "@mastra/core": "^0.15.2",
     "ai": "^5.0.29",
     "source-map-js": "^1.2.1"
   },

@@ -2,7 +2,7 @@ import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { google } from '@ai-sdk/google';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
-import { detectHelpMessage } from '../../lib/utils';
+import { handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
   req: AgentRequest,
@@ -13,7 +13,7 @@ export default async function Agent(
    * Boilerplate *
    ***************/
 
-  const help = await detectHelpMessage(req, resp);
+  const help = await handleHelpMessage(req, resp, ctx, 'AI gateway');
 
   if (help) {
     return help;
@@ -26,6 +26,7 @@ export default async function Agent(
   try {
     const prompt = await req.data.text();
 
+    // OpenAI
     const resultOpenAI = await generateText({
       model: openai('gpt-5-nano'),
       system:
@@ -33,6 +34,7 @@ export default async function Agent(
       prompt,
     });
 
+    // Google
     const resultGoogle = await generateText({
       model: google('gemini-2.0-flash-001'),
       system:
@@ -40,8 +42,9 @@ export default async function Agent(
       prompt,
     });
 
+    // Combined response
     return resp.markdown(
-      `**OpenAI** (GPT-5 Nano)\n\n${resultOpenAI.text}\n\n**Google** (Gemini 2.0 Flash)\n\n${resultGoogle.text}`
+      `### OpenAI (GPT-5 Nano)\n\n${resultOpenAI.text}\n\n---\n\n### Google (Gemini 2.0 Flash)\n\n${resultGoogle.text}`
     );
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
