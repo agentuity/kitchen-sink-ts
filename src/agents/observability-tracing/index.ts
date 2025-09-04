@@ -21,89 +21,68 @@ export default async function Agent(
    * Examples *
    ************/
 
-  // Trace plain-text content
-  if (req.data.contentType === 'text/plain') {
-    return ctx.tracer.startActiveSpan('process-text', async (span) => {
-      try {
-        const content = await req.data.text();
+  let data: unknown;
 
-        // Add attributes to identify the span
-        span.setAttribute('message.content', content);
-        span.setAttribute('message.length', content.length);
-        span.setAttribute('trigger', req.trigger);
-
-        // Add event to mark processing
-        span.addEvent('text-processing-started', {
-          timestamp: Date.now(),
-        });
-
-        // Simulate some processing
-        const result = {
-          message: 'Text processed and traced',
-          input: content,
-          traced: true,
-        };
-
-        // Mark successful completion
-        span.addEvent('text-processing-completed');
-        span.setStatus({ code: SpanStatusCode.OK });
-
-        return resp.json(result);
-      } catch (error) {
-        // Record error in the span
-        span.recordException(error as Error);
-        span.setStatus({ code: SpanStatusCode.ERROR });
-
-        ctx.logger.error('Error processing text:', error);
-        return new Response('Internal Server Error', { status: 500 });
-      }
-    });
+  // Get data in the appropriate format
+  switch (req.data.contentType) {
+    case 'application/json':
+      data = await req.data.json();
+      break;
+    case 'text/plain':
+      data = await req.data.text();
+      break;
+    default:
+      data = await req.data.text();
+      break;
   }
 
-  // Trace JSON content
-  if (req.data.contentType === 'application/json') {
-    return ctx.tracer.startActiveSpan('process-json', async (span) => {
-      try {
-        const data = await req.data.json();
+  return ctx.tracer.startActiveSpan('processing-data', async (span) => {
+    try {
+      // Add common attributes
+      span.setAttribute('trigger', req.trigger);
 
-        // Add structured attributes from the JSON data
+      // Add type-specific attributes
+      if (req.data.contentType === 'text/plain') {
+        span.setAttribute('message.content', data as string);
+        span.setAttribute('message.length', (data as string).length);
+      } else {
         span.setAttribute('data.json', JSON.stringify(data));
         span.setAttribute('data.type', typeof data);
-        span.setAttribute('trigger', req.trigger);
-
-        // Add event with additional context
-        span.addEvent('json-processing-started', {
-          timestamp: Date.now(),
-          hasData: data !== null,
-          dataType: typeof data,
-        });
-
-        // Process the data
-        const result = {
-          message: 'JSON processed and traced',
-          data: data,
-          traced: true,
-        };
-
-        // Mark successful completion with metadata
-        span.addEvent('json-processing-completed', {
-          resultSize: JSON.stringify(result).length,
-        });
-        span.setStatus({ code: SpanStatusCode.OK });
-
-        return resp.json(result);
-      } catch (error) {
-        // Record error in the span
-        span.recordException(error as Error);
-        span.setStatus({ code: SpanStatusCode.ERROR });
-
-        ctx.logger.error('Error processing JSON:', error);
-        return new Response('Internal Server Error', { status: 500 });
       }
-    });
-  }
 
-  return resp.text('You sent an invalid message.');
+      // Add event to mark processing start
+      const startEvent =
+        req.data.contentType === 'text/plain'
+          ? {
+              timestamp: Date.now(),
+            }
+          : {
+              timestamp: Date.now(),
+              hasData: data !== null,
+              dataType: typeof data,
+            };
+
+      span.addEvent('processing-started', startEvent);
+
+      // Process the data
+      const result = {
+        message: 'Event processed and traced',
+        data: data as string,
+        traced: true,
+      };
+
+      span.addEvent('processing-completed', result);
+
+      // Set status to OK
+      span.setStatus({ code: SpanStatusCode.OK });
+
+      return resp.json(result);
+    } catch (error) {
+      ctx.logger.error('Error running agent:', error);
+
+      return new Response('Internal Server Error', { status: 500 });
+    }
+  });
 }
 
 export const welcome = () => {

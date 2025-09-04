@@ -42,6 +42,11 @@ export default async function Agent(
     ctx.logger.warn('Logging a warning message: ', data);
     ctx.logger.error('Logging an error message: ', data);
 
+    // You can create loggers with additional context, which child logs will inherit
+    // The context is available in the "Metadata" section when inspecting a full log
+    const childLogger = ctx.logger.child({ foo: 'bar' });
+    childLogger.debug('Logging a child message: ', data);
+
     return resp.text('Check the logs below to see the output.');
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
