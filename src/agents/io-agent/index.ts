@@ -67,19 +67,45 @@ export default async function Agent(
   }
 
   // Fetch from agents with public access, via webhook or API
-  if (content === 'Fetch') {
-    // TODO: Add a public API to a sample agent and demonstrate fetching
-    return resp.text('Fetch is not yet implemented');
+  // The example below is a complicated streaming example; a simple fetch works just as well
+  // Using an agent's API is particularly useful for agents outside of your organization
+  if (content === 'Public Agent') {
+    const response = await fetch(
+      // A public `handler-response` agent
+      'https://agentuity.ai/api/a2d37fcdd47a1df58c621022909932ba',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: 'Stream',
+      }
+    );
 
-    // const response = await fetch('https://agentuity.ai/api/123abc', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'text/plain',
-    //   },
-    //   body: 'Tell me a short story about AI agents',
-    // });
+    if (!response.body) {
+      ctx.logger.error('Error running agent: No response body available');
 
-    // return resp.text(await response.text(), 'text/markdown');
+      return new Response('Internal Server Error', { status: 500 });
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    let result = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+
+        if (done) break;
+
+        result += decoder.decode(value, { stream: true });
+      }
+
+      return resp.text(result, 'text/markdown');
+    } finally {
+      reader.releaseLock();
+    }
   }
 
   return resp.text('You sent an invalid message.');
@@ -97,10 +123,10 @@ export const welcome = () => {
         data: `Run`,
         contentType: 'text/plain',
       },
-      // {
-      //   data: `Public Agent`,
-      //   contentType: 'text/plain',
-      // },
+      {
+        data: `Public Agent`,
+        contentType: 'text/plain',
+      },
     ],
   };
 };
