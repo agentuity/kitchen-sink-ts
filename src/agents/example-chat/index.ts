@@ -10,8 +10,8 @@ type Message = UserModelMessage | AssistantModelMessage;
 
 export default async function Agent(
   req: AgentRequest & {
-    metadata?: {
-      headers?: {
+    metadata: {
+      headers: {
         // NOTE: Not typically necessary, this is only to enable DevMode functionality
         'agentuity-metadata-devmodeuserid'?: string;
         [key: string]: string | undefined;
@@ -25,7 +25,7 @@ export default async function Agent(
   const bucket = 'kitchen-sink';
 
   // You should use whatever UUID makes sense for your use case, such as a user ID or a session ID
-  const key = `example-chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`;
+  const key = `example-chat-${req.metadata.headers['agentuity-metadata-devmodeuserid']}`;
 
   // Messages array
   let messages: Message[] = [];

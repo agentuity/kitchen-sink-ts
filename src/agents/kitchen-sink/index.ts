@@ -39,9 +39,9 @@ type Message = UserModelMessage | AssistantModelMessage;
 
 export default async function Agent(
   req: AgentRequest & {
-    metadata?: {
-      headers?: {
-        'agentuity-metadata-devmodeuserid'?: string;
+    metadata: {
+      headers: {
+        'agentuity-metadata-devmodeuserid': string;
         [key: string]: string | undefined;
       };
     };
@@ -55,7 +55,7 @@ export default async function Agent(
   try {
     const chatHistory = await ctx.kv.get(
       'kitchen-sink',
-      `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`
+      `chat-${req.metadata.headers['agentuity-metadata-devmodeuserid']}`
     );
 
     if (chatHistory.exists) {
@@ -170,7 +170,7 @@ export default async function Agent(
 
         await ctx.kv.set(
           'kitchen-sink',
-          `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`,
+          `chat-${req.metadata.headers['agentuity-metadata-devmodeuserid']}`,
           messages,
           {
             ttl: 60 * 60 * 24,

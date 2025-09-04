@@ -32,7 +32,10 @@
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
     "@mastra/core": "^0.15.2",
+    "@slack/types": "^2.16.0",
+    "@slack/web-api": "^7.10.0",
     "ai": "^5.0.29",
+    "crypto": "^1.0.1",
     "source-map-js": "^1.2.1"
   },
   "module": "index.ts"
