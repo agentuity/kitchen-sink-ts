@@ -44,7 +44,11 @@ export default async function Agent(
 
     // Combined response
     return resp.markdown(
-      `### OpenAI (GPT-5 Nano)\n\n${resultOpenAI.text}\n\n---\n\n### Google (Gemini 2.0 Flash)\n\n${resultGoogle.text}`
+      '### OpenAI (GPT-5 Nano)\n\n' +
+        resultOpenAI.text +
+        '\n\n---\n\n' +
+        '### Google (Gemini 2.0 Flash)\n\n' +
+        resultGoogle.text
     );
   } catch (error) {
     ctx.logger.error('Error running agent:', error);

@@ -34,12 +34,12 @@ export default async function Agent(
         document: content, // This text gets embedded for semantic search
         metadata: {
           content: content, // Store original content for retrieval
-          timestamp: new Date().toISOString(),
+          timestamp: new Date().toISOString(), // Optional, add whatever metadata you want
         },
       });
 
       // Search with partial text to demonstrate semantic similarity
-      // Note: This demo uses partial text for predictable results.
+      // NOTE: This demo uses partial text for predictable results.
       // True semantic search would find related content with different words,
       // e.g., searching "comfortable seating" to find "ergonomic office chair"
       const searchQuery = content.split(' ').slice(0, 3).join(' ');
@@ -56,9 +56,9 @@ export default async function Agent(
       // Return formatted text response
       if (results.length > 0 && results[0]) {
         return resp.text(
-          `Query: "${searchQuery}"\n\n` +
+          `Searched For: "${searchQuery}"\n\n` +
             `Found: "${results[0].metadata?.content}"\n\n` +
-            `Similarity: ${results[0].similarity.toFixed(3)}` // Round to 3 decimal places
+            `Similarity: ${results[0].similarity.toFixed(3)}`
         );
       } else {
         return resp.text(
@@ -86,12 +86,12 @@ export default async function Agent(
         document: textToEmbed, // This text gets embedded for semantic search
         metadata: {
           content: textToEmbed, // Store the stringified version
-          timestamp: new Date().toISOString(),
+          timestamp: new Date().toISOString(), // Optional, add whatever metadata you want
         },
       });
 
       // Search with partial text to demonstrate similarity matching
-      // Note: This demo uses partial text for predictable results.
+      // NOTE: This demo uses partial text for predictable results.
       // True semantic search would find related content with different words,
       // e.g., searching "comfortable seating" to find "ergonomic office chair"
       const searchQuery = textToEmbed.split(' ').slice(0, 3).join(' ');
@@ -108,13 +108,13 @@ export default async function Agent(
       // Return formatted text response
       if (results.length > 0 && results[0]) {
         return resp.text(
-          `Query: ${searchQuery}..."}\n\n` +
-            `Found: ${results[0].metadata?.content}\n\n` + // No quotes since it's already JSON string
-            `Similarity: ${results[0].similarity.toFixed(3)}` // Round to 3 decimal places
+          `Searched For: \`${searchQuery}\`\n\n` +
+            `Found: \`${results[0].metadata?.content}\`\n\n` +
+            `Similarity: ${results[0].similarity.toFixed(3)}`
         );
       } else {
         return resp.text(
-          `No similar content found for query: "${searchQuery}"`
+          `No similar content found for query: \`${searchQuery}\``
         );
       }
     } catch (error) {
@@ -129,7 +129,7 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Vector Store</span> example agent.\n\n### About\n\nVector storage enables semantic search — finding content by meaning rather than exact matches. Perfect for AI-powered search, recommendations, and knowledge bases.\n\n### Testing\n\nSend a plain-text or JSON message and we'll store it, search for similar content, and show similarity scores.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Vector Store</span> example agent.\n\n### About\n\nVector storage enables semantic search — finding content by meaning rather than exact matches. Perfect for AI-powered search, recommendations, and knowledge bases.\n\n### Testing\n\nSend a plain-text or JSON message and we'll store it, search for similar content (by querying for the beginning of the content you send), and show similarity scores.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
     prompts: [
       {
         data: `The quick brown fox jumps over the lazy dog`,

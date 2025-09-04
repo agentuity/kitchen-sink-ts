@@ -47,7 +47,11 @@ export default async function AgentuityAgent(
 
     // Combined response
     return resp.markdown(
-      `### Vercel AI SDK\n\n${resultAISDK.text}\n\n---\n\n### Mastra\n\n${resultMastra.text}`
+      '### Vercel AI SDK\n\n' +
+        resultAISDK.text +
+        '\n\n---\n\n' +
+        '### Mastra\n\n' +
+        resultMastra.text
     );
   } catch (error) {
     ctx.logger.error('Error running agent:', error);

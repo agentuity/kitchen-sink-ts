@@ -47,7 +47,10 @@ export default async function Agent(
     const agentsList = JSON.stringify(ctx.agents.slice(0, 3), null, 2);
 
     return resp.markdown(
-      `Showing first 3 available agents...\n\n\`\`\`json\n${agentsList}\n\`\`\``
+      'Showing first 3 available agents...\n\n' +
+        '```json\n' +
+        agentsList +
+        '\n```'
     );
   }
 

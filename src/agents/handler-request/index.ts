@@ -66,7 +66,14 @@ export default async function Agent(
 
   return resp.text(
     data
-      ? `You sent a \`${req.data.contentType}\` message via the ${trigger} trigger with the following data:\n\n\`\`\`json\n${data}\n\`\`\`\n\nAnd the following metadata:\n\n\`\`\`json\n${JSON.stringify(req.metadata, null, 2)}\n\`\`\``
+      ? `You sent a \`${req.data.contentType}\` message via the ${trigger} trigger with the following data:\n\n` +
+          '```json\n' +
+          data +
+          '\n```\n\n' +
+          'And the following metadata:\n\n' +
+          '```json\n' +
+          JSON.stringify(req.metadata, null, 2) +
+          '\n```'
       : `You sent a content type that isn't supported in this example`
   );
 }
