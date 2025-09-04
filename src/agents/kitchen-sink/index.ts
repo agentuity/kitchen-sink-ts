@@ -119,66 +119,67 @@ export default async function Agent(
     const response = resp.stream(result.textStream, 'text/markdown');
 
     // Post-response actions, run after the response is streamed
-    Promise.resolve().then(async () => {
-      // Add assistant response to messages array and update KV
-      const finalText = await result.text;
+    (async () => {
+      try {
+        // Add assistant response to messages array and update KV
+        const finalText = await result.text;
 
-      messages.push({
-        role: 'assistant',
-        content: finalText,
-      });
-
-      // Compact conversation history if necessary
-      const totalUsage = await result.totalUsage;
-      const totalTokens =
-        (totalUsage?.inputTokens ?? 0) + (totalUsage?.outputTokens ?? 0);
-
-      ctx.logger.info('Conversation history tokens:', {
-        totalTokens,
-        inputTokens: totalUsage?.inputTokens,
-        outputTokens: totalUsage?.outputTokens,
-      });
-
-      // if (totalTokens > 350000) {
-      if (messages.length >= 4) {
-        ctx.logger.info(
-          'Conversation history has reached the maximum number of tokens. Compacting...'
-        );
-
-        const compactedChatHistory = await generateObject({
-          model: openai('gpt-5-nano'),
-          system: `
-            Summarize the conversation history into a single "assistant" message. Make sure to preserve the intent and author attribution of the conversation. You can remove any information that is not relevant to the conversation, and you can remove code blocks if they aren't necessary.
-        
-            Your goal is to reduce the number of tokens in the conversation history to the smallest possible number, IMPORTANTLY, while preserving the intent of the conversation.
-        
-            Start the message with the following: "# Conversation History Summary"
-          `,
-          messages,
-          schema: z.object({
-            messages: z.array(
-              z.object({
-                role: z.enum(['assistant']),
-                content: z.string(),
-              })
-            ),
-          }),
+        messages.push({
+          role: 'assistant',
+          content: finalText,
         });
 
-        messages = compactedChatHistory.object.messages as Message[];
-      }
+        // Compact conversation history if necessary
+        const totalUsage = await result.totalUsage;
+        const totalTokens =
+          (totalUsage?.inputTokens ?? 0) + (totalUsage?.outputTokens ?? 0);
 
-      await ctx.kv.set(
-        'kitchen-sink',
-        `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`,
-        messages,
-        {
-          ttl: 60 * 60 * 24,
+        ctx.logger.info('Conversation history tokens:', {
+          totalTokens,
+          inputTokens: totalUsage?.inputTokens,
+          outputTokens: totalUsage?.outputTokens,
+        });
+
+        if (totalTokens > 350000) {
+          ctx.logger.info(
+            'Conversation history has reached the maximum number of tokens. Compacting...'
+          );
+
+          const compactedChatHistory = await generateObject({
+            model: openai('gpt-5-nano'),
+            system: `
+              Summarize the conversation history into a single "assistant" message. Make sure to preserve the intent and author attribution of the conversation. You can remove any information that is not relevant to the conversation, and you can remove code blocks if they aren't necessary.
+          
+              Your goal is to reduce the number of tokens in the conversation history to the smallest possible number, IMPORTANTLY, while preserving the intent of the conversation.
+          
+              Start the message with the following: "# Conversation History Summary"
+            `,
+            messages,
+            schema: z.object({
+              messages: z.array(
+                z.object({
+                  role: z.enum(['assistant']),
+                  content: z.string(),
+                })
+              ),
+            }),
+          });
+
+          messages = compactedChatHistory.object.messages as Message[];
         }
-      );
 
-      return;
-    });
+        await ctx.kv.set(
+          'kitchen-sink',
+          `chat-${req.metadata.headers?.['agentuity-metadata-devmodeuserid']}`,
+          messages,
+          {
+            ttl: 60 * 60 * 24,
+          }
+        );
+      } catch (error) {
+        ctx.logger.error('Error saving chat history:', error);
+      }
+    })();
 
     return response;
   } catch (error) {
