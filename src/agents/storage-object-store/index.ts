@@ -22,10 +22,10 @@ export default async function Agent(
 
   const bucket = 'kitchen-sink'; // You must create the bucket and select a provider first
   const key = `storage-object-store-${Date.now()}`;
-  const content = await req.data.text();
+  const prompt = await req.data.text();
 
   // Store plain-text content
-  if (content === 'Plain-Text') {
+  if (prompt === 'Plain-Text') {
     try {
       try {
         await ctx.objectstore.put(bucket, key, 'Hello, world!', {
@@ -66,7 +66,7 @@ export default async function Agent(
   }
 
   // Store image file
-  if (content === 'Image') {
+  if (prompt === 'Image') {
     try {
       const file = Bun.file('./src/lib/test-image.png');
       const fileContent = await file.arrayBuffer();
@@ -104,7 +104,7 @@ export default async function Agent(
   }
 
   // Store markdown with a public URL
-  if (content === 'Public URL') {
+  if (prompt === 'Public URL') {
     try {
       try {
         await ctx.objectstore.put(

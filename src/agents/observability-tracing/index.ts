@@ -21,18 +21,18 @@ export default async function Agent(
    * Examples *
    ************/
 
-  let data: unknown;
+  let prompt: unknown;
 
   // Get data in the appropriate format
   switch (req.data.contentType) {
     case 'application/json':
-      data = await req.data.json();
+      prompt = await req.data.json();
       break;
     case 'text/plain':
-      data = await req.data.text();
+      prompt = await req.data.text();
       break;
     default:
-      data = await req.data.text();
+      prompt = await req.data.text();
       break;
   }
 
@@ -43,11 +43,11 @@ export default async function Agent(
 
       // Add type-specific attributes
       if (req.data.contentType === 'text/plain') {
-        span.setAttribute('message.content', data as string);
-        span.setAttribute('message.length', (data as string).length);
+        span.setAttribute('message.content', prompt as string);
+        span.setAttribute('message.length', (prompt as string).length);
       } else {
-        span.setAttribute('data.json', JSON.stringify(data));
-        span.setAttribute('data.type', typeof data);
+        span.setAttribute('data.json', JSON.stringify(prompt));
+        span.setAttribute('data.type', typeof prompt);
       }
 
       // Add event to mark processing start
@@ -58,8 +58,8 @@ export default async function Agent(
             }
           : {
               timestamp: Date.now(),
-              hasData: data !== null,
-              dataType: typeof data,
+              hasData: prompt !== null,
+              dataType: typeof prompt,
             };
 
       span.addEvent('processing-started', startEvent);
@@ -67,7 +67,7 @@ export default async function Agent(
       // Process the data
       const result = {
         message: 'Event processed and traced',
-        data: data as string,
+        data: prompt as string,
         traced: true,
       };
 

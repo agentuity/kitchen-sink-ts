@@ -31,6 +31,8 @@
     "@agentuity/sdk": "^0.0.144",
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
+    "@composio/core": "^0.1.50",
+    "@composio/vercel": "^0.2.6",
     "@mastra/core": "^0.15.2",
     "@slack/types": "^2.16.0",
     "@slack/web-api": "^7.10.0",

@@ -26,9 +26,9 @@ export default async function Agent(
   // Store plain-text content
   if (req.data.contentType === 'text/plain') {
     try {
-      const content = await req.data.text();
+      const prompt = await req.data.text();
 
-      await ctx.kv.set(bucket, key, content, {
+      await ctx.kv.set(bucket, key, prompt, {
         ttl: 60, // 1 minute, optional, defaults to forever
         contentType: 'text/plain', // optional
       });
@@ -57,9 +57,9 @@ export default async function Agent(
   // Store JSON content
   if (req.data.contentType === 'application/json') {
     try {
-      const content = await req.data.json();
+      const prompt = await req.data.json();
 
-      await ctx.kv.set(bucket, key, content, {
+      await ctx.kv.set(bucket, key, prompt, {
         ttl: 60, // 1 minute, optional, defaults to forever
         contentType: 'application/json', // optional
       });

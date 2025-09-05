@@ -20,10 +20,10 @@ export default async function Agent(
    * Examples *
    ************/
 
-  const content = await req.data.text();
+  const prompt = await req.data.text();
 
   // Session Data
-  if (content === 'Session Data') {
+  if (prompt === 'Session Data') {
     const sessionData = JSON.stringify(
       {
         sdkVersion: ctx.sdkVersion,
@@ -43,7 +43,7 @@ export default async function Agent(
   }
 
   // Available Agents List
-  if (content === 'Available Agents List') {
+  if (prompt === 'Available Agents List') {
     const agentsList = JSON.stringify(ctx.agents.slice(0, 3), null, 2);
 
     return resp.markdown(

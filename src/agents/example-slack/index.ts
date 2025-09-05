@@ -81,7 +81,7 @@ export default async function Agent(
 
       // Generate a reply
       const result = await generateText({
-        model: openai('gpt-4o-mini'),
+        model: openai('gpt-5-mini'),
         system: `You are a helpful Slack bot assistant that can have a conversation with the user. Try to limit your response length.`,
         messages,
       });

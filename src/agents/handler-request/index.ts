@@ -24,14 +24,14 @@ export default async function Agent(
    ************/
 
   // Content type and data accessors
-  let data: unknown = '';
+  let prompt: unknown = '';
 
   switch (req.data.contentType) {
     case 'application/json':
-      data = JSON.stringify(await req.data.json(), null, 2);
+      prompt = JSON.stringify(await req.data.json(), null, 2);
       break;
     case 'text/plain':
-      data = await req.data.text();
+      prompt = await req.data.text();
       break;
     // case req.data.base64()
     // case req.data.binary()
@@ -65,10 +65,10 @@ export default async function Agent(
   // const customHeaderValue = req.metadata.headers?.['x-custom-header'];
 
   return resp.text(
-    data
+    prompt
       ? `You sent a \`${req.data.contentType}\` message via the ${trigger} trigger with the following data:\n\n` +
           '```json\n' +
-          data +
+          prompt +
           '\n```\n\n' +
           'And the following metadata:\n\n' +
           '```json\n' +

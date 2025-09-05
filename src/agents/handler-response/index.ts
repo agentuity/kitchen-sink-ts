@@ -27,22 +27,22 @@ export default async function Agent(
    * Examples *
    ************/
 
-  const content = await req.data.text();
+  const prompt = await req.data.text();
 
   // Images
-  if (content === 'Image') {
+  if (prompt === 'Image') {
     return resp.png(await Bun.file('./src/lib/test-image.png').arrayBuffer());
   }
 
   // Plain-text
-  if (content === 'Plain-text') {
+  if (prompt === 'Plain-text') {
     return resp.text('Hello, world!');
   }
 
   // Streaming content
-  if (content === 'Stream') {
+  if (prompt === 'Stream') {
     const result = await streamText({
-      model: openai('gpt-5-mini'),
+      model: openai('gpt-5-nano'),
       prompt:
         'Give me a list of 25 popular international cities, in markdown format.',
     });
@@ -51,7 +51,7 @@ export default async function Agent(
   }
 
   // NOTE: We'd enable this, but then the tests would fail
-  // if (content === 'Show me a 500 error') {
+  // if (prompt === 'Show me a 500 error') {
   //   return resp.text(`Successfully failed to return a 500 error`, {
   //     status: 500,
   //     statusText: 'Internal Server Error',

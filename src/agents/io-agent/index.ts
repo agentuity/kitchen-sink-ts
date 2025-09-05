@@ -25,10 +25,10 @@ export default async function Agent(
    * Examples *
    ************/
 
-  const content = await req.data.text();
+  const prompt = await req.data.text();
 
   // Handoff processing to another agent
-  if (content === 'Handoff') {
+  if (prompt === 'Handoff') {
     try {
       return resp.handoff(
         {
@@ -47,7 +47,7 @@ export default async function Agent(
   }
 
   // Run and wait for a response from the agent
-  if (content === 'Run') {
+  if (prompt === 'Run') {
     try {
       const agent = await ctx.getAgent({
         name: 'gateway-provider',
@@ -69,7 +69,7 @@ export default async function Agent(
   // Fetch from agents with public access, via webhook or API
   // The example below is a complicated streaming example; a simple fetch works just as well
   // Using an agent's API is particularly useful for agents outside of your organization
-  if (content === 'Public Agent') {
+  if (prompt === 'Public Agent') {
     const response = await fetch(
       // A public `handler-response` agent
       'https://agentuity.ai/api/a2d37fcdd47a1df58c621022909932ba',

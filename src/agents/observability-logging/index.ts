@@ -20,32 +20,32 @@ export default async function Agent(
    * Examples *
    ************/
 
-  let data: unknown;
+  let prompt: unknown;
 
   // Get data in the appropriate format
   switch (req.data.contentType) {
     case 'application/json':
-      data = await req.data.json();
+      prompt = await req.data.json();
       break;
     case 'text/plain':
-      data = await req.data.text();
+      prompt = await req.data.text();
       break;
     default:
-      data = await req.data.text();
+      prompt = await req.data.text();
       break;
   }
 
   try {
     // Demonstrate different log levels
-    ctx.logger.debug('Logging a debug message: ', data);
-    ctx.logger.info('Logging an info message: ', data);
-    ctx.logger.warn('Logging a warning message: ', data);
-    ctx.logger.error('Logging an error message: ', data);
+    ctx.logger.debug('Logging a debug message: ', prompt);
+    ctx.logger.info('Logging an info message: ', prompt);
+    ctx.logger.warn('Logging a warning message: ', prompt);
+    ctx.logger.error('Logging an error message: ', prompt);
 
     // You can create loggers with additional context, which child logs will inherit
     // The context is available in the "Metadata" section when inspecting a full log
     const childLogger = ctx.logger.child({ foo: 'bar' });
-    childLogger.debug('Logging a child message: ', data);
+    childLogger.debug('Logging a child message: ', prompt);
 
     return resp.text('Check the logs below to see the output.');
   } catch (error) {

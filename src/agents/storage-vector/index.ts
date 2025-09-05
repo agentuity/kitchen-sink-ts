@@ -27,7 +27,7 @@ export default async function Agent(
   const bucket = 'kitchen-sink'; // Buckets are auto-created if they don't exist
 
   try {
-    const content = await req.data.text();
+    const prompt = await req.data.text();
 
     // Upsert sample products data
     for (const product of sampleProducts) {
@@ -43,7 +43,7 @@ export default async function Agent(
 
     // Search for products: returns array with similarity scores (0-1)
     const productResults = await ctx.vector.search(bucket, {
-      query: content,
+      query: prompt,
       limit: 3, // Get top 3 matches
       similarity: 0.3, // Minimum similarity threshold
     });
@@ -78,7 +78,7 @@ export default async function Agent(
           In addition to your best recommendation, you can optionally provide an upsell suggestion. If you do, add an aditional line that tries to convince the customer to upgrade to the upsell chair and return the upsell SKU as the "upsellSKU".
         `,
         prompt: `
-          Customer searched for: "${content}"
+          Customer searched for: "${prompt}"
 
           Options:
           ${context}
@@ -89,8 +89,6 @@ export default async function Agent(
           upsellSKU: z.string().optional(),
         }),
       });
-
-      console.log('result', result.object);
 
       response += '---\n\n';
       response += '## Recommendation\n\n';
