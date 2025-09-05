@@ -1,6 +1,7 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { openai } from '@ai-sdk/openai';
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 import { handleHelpMessage } from '../../lib/utils';
 import sampleProducts from './sample-products.json';
 
@@ -23,43 +24,26 @@ export default async function Agent(
    * Examples *
    ************/
 
-  // Get data in the appropriate format
-  let data: unknown;
-  switch (req.data.contentType) {
-    case 'application/json':
-      // Stringify JSON inputs for vector search
-      data = JSON.stringify(await req.data.json());
-      break;
-    case 'text/plain':
-      data = await req.data.text();
-      break;
-    default:
-      data = await req.data.text();
-      break;
-  }
-
-  // The vector storage search() method expects a string query
-  const query = data as string;
+  const bucket = 'kitchen-sink'; // Buckets are auto-created if they don't exist
 
   try {
-    // Define collection name
-    const PRODUCTS_DB = 'kitchen-sink-products';
+    const content = await req.data.text();
 
     // Upsert sample products data
     for (const product of sampleProducts) {
-      await ctx.vector.upsert(PRODUCTS_DB, {
-        key: product.id,
-        // Document: Product description converted to embeddings for feature-based semantic search
+      await ctx.vector.upsert(bucket, {
+        key: product.sku,
+        // Product description converted to embeddings for feature-based semantic search
         // All other data is kept in metadata only for cleaner similarity matching
         document: `${product.description}`,
-        // Metadata: We store the complete product object here (to access/print data like price, rating, and feedback)
+        // We store the complete product object here (to access/print data like price, rating, and feedback)
         metadata: product,
       });
     }
 
     // Search for products: returns array with similarity scores (0-1)
-    const productResults = await ctx.vector.search(PRODUCTS_DB, {
-      query,
+    const productResults = await ctx.vector.search(bucket, {
+      query: content,
       limit: 3, // Get top 3 matches
       similarity: 0.3, // Minimum similarity threshold
     });
@@ -69,61 +53,78 @@ export default async function Agent(
       // Format the top results with similarity scores
       let response = '## Top Matching Chairs\n\n';
 
-      productResults.forEach((result, index) => {
+      productResults.forEach((result) => {
         const product = result.metadata;
 
-        response += `### ${index + 1}. ${product?.name}\n`;
-        response += `**Price:** $${product?.price} | **Rating:** ${product?.avg_rating}/5 stars | **Similarity:** ${result.similarity.toFixed(2)}\n\n`;
-        response += `${product?.description}\n\n`;
+        response += `#### ${product?.name}\n`;
+        response += `\\$${product?.price} (${product?.avg_rating} rating) | Similarity: ${result.similarity.toFixed(2)}\n\n`;
       });
 
       // Build context for LLM recommendation (using top 3 products, based on similarity score)
       const context = productResults
         .map((result) => {
           const product = result.metadata;
-          return `${product?.name}: $${product?.price}, ${product?.avg_rating}★, ${product?.customer_feedback}`;
+
+          return `${product?.name}: SKU ${product?.sku}, \\$${product?.price}, ${product?.avg_rating} rating, ${product?.customer_feedback}`;
         })
         .join('\n');
 
       // Generate brief recommendation using LLM
-      const { text: recommendation } = await generateText({
+      const result = await generateObject({
         model: openai('gpt-5-nano'),
-        system: `You are a furniture consultant who provides clear, concise recommendations. Use plain text only, no special formatting.`,
-        prompt: `Customer searched for: "${query}"
+        system: `
+          You are a furniture consultant who provides clear, concise recommendations. Use markdown format, paragraph only (you can very sparingly use bold/emphasis, just for product names). Provide a brief, focused recommendation in 2-3 sentences. If you can work a customer review into your recommendation, do so. Do not include the SKU in your textual recommendation. Return the best matched SKU as the "recommendedSKU".
 
-Options:
-${context}
+          In addition to your best recommendation, you can optionally provide an upsell suggestion. If you do, add an aditional line that tries to convince the customer to upgrade to the upsell chair and return the upsell SKU as the "upsellSKU".
+        `,
+        prompt: `
+          Customer searched for: "${content}"
 
-Provide a brief, focused recommendation in one sentence. Plain text only. Example: "Choose the Budget Basic for price, or consider the Mesh Breeze at $449 for better comfort."`,
+          Options:
+          ${context}
+        `,
+        schema: z.object({
+          summary: z.string(),
+          recommendedSKU: z.string(),
+          upsellSKU: z.string().optional(),
+        }),
       });
 
-      response += '## Recommendation\n\n';
-      response += recommendation;
+      console.log('result', result.object);
 
-      // Use vector.get() to fetch full details of the top result, using its key
-      if (productResults[0]) {
+      response += '---\n\n';
+      response += '## Recommendation\n\n';
+      response += result.object.summary.replace(/\$/g, '\\$'); // Markdown formatter sometimes thinks $ is a MaTeX block
+
+      const customerReviewsSKU =
+        result.object.upsellSKU || result.object.recommendedSKU;
+
+      // Use vector.get() to fetch full details of the recommended product result, using its key
+      if (customerReviewsSKU) {
         const topProductDetail = await ctx.vector.get(
-          PRODUCTS_DB,
-          productResults[0].key
+          bucket,
+          customerReviewsSKU
         );
+
         if (topProductDetail?.metadata?.customer_feedback) {
           response += '\n\n';
-          response += `**Customer feedback for #1 match (${topProductDetail.metadata.name}):** ${topProductDetail.metadata.customer_feedback}`;
+          response += `#### What customers say about ${topProductDetail.metadata.name}:\n`;
+          response += topProductDetail.metadata.customer_feedback;
         }
       }
 
-      // Clean up: delete all entries we created once we're done
+      // Delete all entries we created once we're done with the demo
       for (const product of sampleProducts) {
-        await ctx.vector.delete(PRODUCTS_DB, product.id);
+        await ctx.vector.delete(bucket, product.sku);
       }
 
-      return resp.text(response);
+      return resp.markdown(response);
     } else {
-      return resp.text(
+      return resp.markdown(
         'No chairs found matching your search. Try:\n' +
           '• "comfortable office chair"\n' +
-          '• "ergonomic chair"\n' +
-          '• "budget chair"'
+          '• "budget chair for home office"\n' +
+          '• "best ergonomic chair"'
       );
     }
   } catch (error) {
@@ -134,7 +135,7 @@ Provide a brief, focused recommendation in one sentence. Plain text only. Exampl
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Vector Storage</span> example agent.\n\n### About\n\nVector storage enables semantic search — finding content by meaning rather than exact matches. This example demonstrates chair shopping with product reviews to showcase how vector search understands context and intent.\n\n### How It Works\n\nSemantic search understands meaning, not just keywords. When you search for "comfortable chair", it finds chairs that match that concept, even if they use different words like "ergonomic" or "supportive".\n\n### Try These Examples\n\n• Search naturally: "comfortable office chair" or "chair for gaming"\n\n• Budget-focused: "affordable chair" or "budget seating"\n\n• Quality-focused: "best chair" or "premium executive chair"\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Vector Storage</span> example agent.\n\n### About\n\nVector storage enables semantic search for your agents, allowing them to find information by meaning rather than keywords. Ideal for knowledge bases, RAG systems, and persistent agent memory.\n\n### Testing\n\nChoose one of the pre-set message options and we'll search a sample database of office chairs, showing you the most relevant matches and a recommendation. You'll notice that searching for "budget" chairs, for example, also return results for "affordable" and "cheap" chairs.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
     prompts: [
       {
         data: `comfortable office chair`,

@@ -1,6 +1,6 @@
 [
   {
-    "id": "chair-001",
+    "sku": "chair-001",
     "name": "Ergonomic Pro Office Chair",
     "description": "Premium ergonomic office chair with advanced lumbar support, 4D adjustable armrests, and breathable mesh back for all-day comfort.",
     "price": 899,
@@ -8,7 +8,7 @@
     "customer_feedback": "Alex finds this incredibly comfortable with perfect lumbar support for back problems and says it's worth every penny. Jennifer mentions it's a great chair overall though the price is steep, but her back pain has reduced significantly. David thinks it's the best office chair he's owned and the mesh keeps him cool during long work sessions."
   },
   {
-    "id": "chair-002",
+    "sku": "chair-002",
     "name": "Budget Basic Task Chair",
     "description": "Simple and affordable task chair with basic height adjustment and standard foam cushioning.",
     "price": 129,
@@ -16,7 +16,7 @@
     "customer_feedback": "John says you get what you pay for and it's not comfortable for long periods as his back starts hurting after 2 hours. Sarah reviewed it as adequate for the price but warns don't expect comfort as this is purely functional. Mike found the chair does its job but mentioned that calling it comfortable would be a stretch."
   },
   {
-    "id": "chair-003",
+    "sku": "chair-003",
     "name": "Executive Leather Throne",
     "description": "Luxurious high-back executive chair with genuine leather upholstery, memory foam padding, and polished aluminum base.",
     "price": 1899,
@@ -24,7 +24,7 @@
     "customer_feedback": "Emma absolutely loves this chair and finds the leather buttery soft and incredibly comfortable. Robert says the premium quality throughout makes him feel like a CEO and it's very comfortable. Susan thinks it's an excellent chair but very expensive, though the comfort level is outstanding."
   },
   {
-    "id": "chair-004",
+    "sku": "chair-004",
     "name": "Gaming Racer X",
     "description": "Racing-style gaming chair with adjustable lumbar pillow, reclining backrest up to 180 degrees, and bold sporty aesthetics.",
     "price": 349,
@@ -32,7 +32,7 @@
     "customer_feedback": "Tyler finds it great for gaming sessions and loves the recline feature, saying it's comfortable enough for long sessions. Ashley says it looks cool but comfort is just okay and not as comfortable as dedicated ergonomic chairs. Jake's teenager loves it and says it's comfortable for both gaming and homework."
   },
   {
-    "id": "chair-005",
+    "sku": "chair-005",
     "name": "Mesh Breeze Mid-Back",
     "description": "Modern mid-back office chair with full mesh construction for maximum breathability and adjustable lumbar support.",
     "price": 449,
@@ -40,7 +40,7 @@
     "customer_feedback": "Lisa says it's perfect for her home office with no more sweating during summer and finds it very comfortable. Tom reviewed it as a good chair with excellent ventilation that's comfortable for most of the day. Nancy thinks the breathability is fantastic and it's comfortable overall, though not as plush as padded chairs."
   },
   {
-    "id": "chair-006",
+    "sku": "chair-006",
     "name": "Posture Plus Standing Desk Chair",
     "description": "Unique sit-stand chair with forward tilt design and height range suitable for standing desks.",
     "price": 599,
@@ -48,7 +48,7 @@
     "customer_feedback": "Chris calls it revolutionary for standing desks and says his posture has improved dramatically. Jessica mentions it takes getting used to and isn't traditionally comfortable but she does notice better posture. Michael thinks it's a great concept with good execution and more comfortable than pure standing."
   },
   {
-    "id": "chair-007",
+    "sku": "chair-007",
     "name": "Classic Wood Executive",
     "description": "Traditional wooden executive chair with tufted leather seat and vintage banker's style.",
     "price": 799,
