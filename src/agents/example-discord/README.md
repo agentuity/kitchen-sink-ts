@@ -41,7 +41,7 @@
 
 ## Example Usage
 
-This agent accepts any JSON payload and uses AI to create Discord notifications. The AI analyzes your data and generates a concise summary ideal for Discord's embed format.
+This agent accepts any JSON payload and uses an LLM to create Discord notifications.
 
 ### Sample Event Data
 
