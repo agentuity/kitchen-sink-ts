@@ -45,14 +45,14 @@ This example uses the HackerNews toolkit, but Composio offers many more, includi
    COMPOSIO_API_KEY=your-api-key-here
    ```
    
-   Alternatively, you can set it for your project directly from the command line:
+   Alternatively, you can set it for your project from the command line, before you (re)deploy the Kitchen Sink project:
    ```bash
    agentuity env set --secret COMPOSIO_API_KEY your-api-key-here
    ```
 
 5. **Test the Integration**
    
-   Send a message to the `example-composio` agent asking about the top HackerNews stories of the day.
+   Send a message to the `example-composio` agent asking about HackerNews posts.
 
 ## Learn More
 Check out our video tutorial:

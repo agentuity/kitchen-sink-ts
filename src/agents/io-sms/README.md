@@ -54,7 +54,7 @@ This agent uses a self-webhook pattern to enable SMS sending from DevMode:
 
 - **Before deployment**: You can test commands in DevMode, but actual SMS sending requires deploying the agent first.
 
-- **After deployment with SMS configured**: When you click a command in DevMode, the agent detects the manual trigger and calls its own webhook endpoint, which then sends the actual SMS to your configured phone number. You'll see a success message in DevMode AND receive the SMS.
+- **After deployment with SMS configured**: When you click a command in DevMode, the agent detects the manual trigger and calls its own webhook endpoint, which then sends the actual SMS to your configured phone number. You'll see a success message in DevMode *and* receive the SMS.
 
 ## Important Notes
 

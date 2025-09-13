@@ -52,7 +52,7 @@ This agent uses a self-webhook pattern to enable email sending from DevMode:
 
 - **Before deployment**: You can test commands in DevMode, but actual email sending requires deploying the agent first.
 
-- **After deployment with email configured**: When you click a command in DevMode, the agent detects the manual trigger and calls its own webhook endpoint, which then sends the actual email to your configured recipients. You'll see a success message in DevMode AND receive the email.
+- **After deployment with email configured**: When you click a command in DevMode, the agent detects the manual trigger and calls its own webhook endpoint, which then sends the actual email to your configured recipients. You'll see a success message in DevMode *and* receive the email.
 
 ## Learn More
 Check out our video tutorials:
