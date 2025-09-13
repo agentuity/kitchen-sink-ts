@@ -61,6 +61,7 @@ Follow the link shown in your terminal to launch DevMode in your browser. Select
 These are only needed for specific agent demonstrations:
 - **OPENAI_API_KEY**: Only required for the "Bring-Your-Own-Token" agent demo. Set in your `.env` file locally.
 - **Object Storage bucket**: Only required for the "Object Store" agent demo. Create via the Agentuity Console from the *Infrastructure* section.
+- **Twilio phone number**: Only required for the "SMS IO" agent demo. Requires a Twilio account with a verified phone number (not included in free trials).
 
 **Note**: Most agents work without any additional setup.
 
