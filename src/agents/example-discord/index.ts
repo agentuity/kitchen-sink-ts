@@ -56,11 +56,14 @@ export default async function Agent(
       return resp.text('Notification sent to Discord successfully!');
     } else {
       const errorText = await response.text();
+
       ctx.logger.error('Discord webhook error:', errorText);
+
       return resp.text('Failed to send notification to Discord');
     }
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
+
     return new Response('Internal Server Error', { status: 500 });
   }
 }
