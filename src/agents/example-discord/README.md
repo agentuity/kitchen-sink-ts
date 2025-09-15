@@ -6,11 +6,11 @@
    
    Right-click on the Discord channel where you want to receive notifications and select **Edit Channel**:
    
-   ![Right-click context menu on Discord channel showing Edit Channel option](./screenshots/discord-setup-1-edit-channel.png)
+   ![Right-click context menu on Discord channel showing Edit Channel option](/.github/example-discord/discord-setup-1-edit-channel.png)
    
    Navigate to **Integrations** in the left sidebar, then click on **Webhooks**. You'll see the webhooks page:
    
-   ![Discord Integrations page showing Webhooks section with Create Webhook button](./screenshots/discord-setup-2-create-webhook.png)
+   ![Discord Integrations page showing Webhooks section with Create Webhook button](/.github/example-discord/discord-setup-2-create-webhook.png)
    
    Click **Create Webhook** and configure your webhook:
    - Give it any name you like (this is just for your reference in Discord settings)
@@ -19,7 +19,7 @@
    
    > **Note**: The bot name that appears in Discord messages is set by the agent code as "Agentuity Agent", regardless of what you name the webhook here.
    
-   ![Discord webhook configuration showing Copy Webhook URL button](./screenshots/discord-setup-3-copy-url.png)
+   ![Discord webhook configuration showing Copy Webhook URL button](/.github/example-discord/discord-setup-3-copy-url.png)
 
    > **Alternative Method**: You can also access webhooks via Server Settings → Integrations → Webhooks
 

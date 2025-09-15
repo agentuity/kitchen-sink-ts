@@ -8,7 +8,7 @@ Agents in Agentuity can receive and send emails. This example demonstrates outbo
    
    In the Agentuity web console, navigate to your agent's IO settings (outbound side) and click on Email:
    
-   ![Agentuity Email configuration dialog](./screenshots/email-setup-1-config.png)
+   ![Agentuity Email configuration dialog](/.github/io-email/email-setup-1-config.png)
    
    Add one or more recipient email addresses in the "To" field. Separate multiple addresses with commas.
    
@@ -24,11 +24,11 @@ Agents in Agentuity can receive and send emails. This example demonstrates outbo
    
    To use an agent-specific sender address, enable inbound email for your agent:
    
-   ![Inbound email configuration showing unique agent address](./screenshots/email-setup-2-inbound.png)
+   ![Inbound email configuration showing unique agent address](/.github/io-email/email-setup-2-inbound.png)
    
    Once enabled, your agent receives a unique email address (based on its unique agent ID) that can also be used as the sender address for outbound emails:
 
-   ![Outbound email configuration with a unique agent address](./screenshots/email-setup-3-agent-email.png)
+   ![Outbound email configuration with a unique agent address](/.github/io-email/email-setup-3-agent-email.png)
 
 4. **Test the Integration**
    

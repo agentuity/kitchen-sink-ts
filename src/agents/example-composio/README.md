@@ -22,7 +22,7 @@ This example uses the HackerNews toolkit, but Composio offers many more, includi
    
    Navigate to your Composio dashboard and create a new project:
    
-   ![Composio dashboard showing Create Project button](./screenshots/composio-setup-1-create-project.png)
+   ![Composio dashboard showing Create Project button](/.github/example-composio/composio-setup-1-create-project.png)
    
    Give your project a name. You can optionally enable popular tools like Gmail, GitHub, or Slack at this point.
 
@@ -30,7 +30,7 @@ This example uses the HackerNews toolkit, but Composio offers many more, includi
    
    In your project, navigate to the "Auth Configs" tab to add tools and integrations:
    
-   ![Composio Auth Configs interface](./screenshots/composio-setup-3-auth-configs.png)
+   ![Composio Auth Configs interface](/.github/example-composio/composio-setup-3-auth-configs.png)
    
    Click "Create Auth Config" or "Browse All Toolkits" to add tools to your project. For this example, we're using the HackerNews toolkit (which doesn't require authentication).
 
@@ -38,7 +38,7 @@ This example uses the HackerNews toolkit, but Composio offers many more, includi
    
    In your project settings, locate your API key:
    
-   ![Composio project settings showing API key](./screenshots/composio-setup-2-api-key.png)
+   ![Composio project settings showing API key](/.github/example-composio/composio-setup-2-api-key.png)
    
    Copy the API key and add it to your `.env` file:
    ```

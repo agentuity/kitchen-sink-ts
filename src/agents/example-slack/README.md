@@ -9,7 +9,7 @@ agentuity deploy
 
 Open the agent in the [Agentuity web app](https://app.agentuity.com/). Click on the API IO, ensure it's set to `Public`, and copy the API endpoint URL:
 
-![Agentuity agent showing API endpoint URL configuration](./screenshots/slack-setup-1-api-endpoint.png)
+![Agentuity agent showing API endpoint URL configuration](/.github/example-slack/slack-setup-1-api-endpoint.png)
 
 ## 2. Configure Manifest
 
@@ -21,15 +21,15 @@ Edit the `.slack.manifest` file to:
 
 Go to [api.slack.com/apps](https://api.slack.com/apps) and click **Create New App**. Choose **From a manifest**:
 
-![Slack app creation dialog showing From a manifest option](./screenshots/slack-setup-2-create-app.png)
+![Slack app creation dialog showing From a manifest option](/.github/example-slack/slack-setup-2-create-app.png)
 
 Select the workspace where you want to install the app:
 
-![Slack workspace selection dialog](./screenshots/slack-setup-3-workspace.png)
+![Slack workspace selection dialog](/.github/example-slack/slack-setup-3-workspace.png)
 
 Paste your configured manifest into the dialog:
 
-![Slack manifest configuration with Example Agent details](./screenshots/slack-setup-4-manifest.png)
+![Slack manifest configuration with Example Agent details](/.github/example-slack/slack-setup-4-manifest.png)
 
 > **Note**: After creating the app, you can delete the `.slack.manifest` file if desired.
 
@@ -37,7 +37,7 @@ Paste your configured manifest into the dialog:
 
 In your Slack app settings, go to **Basic Information** to get your **Signing Secret**:
 
-![Slack app Basic Information page showing Signing Secret](./screenshots/slack-setup-5-app-info.png)
+![Slack app Basic Information page showing Signing Secret](/.github/example-slack/slack-setup-5-app-info.png)
 
 Set the signing secret in your Agentuity project:
 ```bash
@@ -50,7 +50,7 @@ Navigate to **OAuth & Permissions** in your Slack app settings. If you haven't i
 
 Once installed, your **Bot User OAuth Token** will be automatically generated:
 
-![Slack OAuth & Permissions page showing Bot User OAuth Token](./screenshots/slack-setup-6-oauth.png)
+![Slack OAuth & Permissions page showing Bot User OAuth Token](/.github/example-slack/slack-setup-6-oauth.png)
 
 Copy the token and set it:
 ```bash

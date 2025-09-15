@@ -12,7 +12,7 @@ Agents in Agentuity can receive and send SMS messages. This example demonstrates
    
    From your [Twilio Console Dashboard](https://console.twilio.com), locate your Account Info:
    
-   ![Twilio Console showing Account SID and Auth Token](./screenshots/sms-setup-1-twilio-dashboard.png)
+   ![Twilio Console showing Account SID and Auth Token](/.github/io-sms/sms-setup-1-twilio-dashboard.png)
    
    You'll need:
    - **Account SID**: Your unique account identifier
@@ -25,7 +25,7 @@ Agents in Agentuity can receive and send SMS messages. This example demonstrates
    
    In the Agentuity web console, navigate to your agent's IO settings and click on SMS:
    
-   ![Agentuity SMS configuration dialog](./screenshots/sms-setup-2-agentuity-config.png)
+   ![Agentuity SMS configuration dialog](/.github/io-sms/sms-setup-2-agentuity-config.png)
    
    Enter your Twilio credentials:
    - Account SID
