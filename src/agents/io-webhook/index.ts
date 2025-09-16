@@ -34,51 +34,37 @@ export default async function Agent(
       // case req.data.base64()
       // case req.data.binary()
       // case req.data.buffer()
-      // ... Webhook IO doesn't have email() or sms() methods
+      // case req.data.object()
+      // case req.data.stream()
+      // NOTE: Webhook IO supports only a subset of data methods
     }
-
-    // Trigger types
-    let trigger: string = '';
-
-    switch (req.trigger) {
-      case 'manual':
-        trigger = 'DevMode (manual)';
-        break;
-      case 'webhook':
-        trigger = 'webhook';
-        break;
-      // case 'agent':
-      // case 'cron':
-      // ... Webhook IO doesn't receive email or sms triggers
-    }
-
-    ctx.logger.info('Webhook received, responding immediately');
 
     // Schedule background processing (fire-and-forget)
     setImmediate(async () => {
       ctx.logger.info('Starting background processing');
+
       await new Promise((resolve) => setTimeout(resolve, 3000));
+
       ctx.logger.info('Background processing complete after 3 seconds');
     });
 
     // Return immediately
     return resp.text(
       prompt
-        ? `Webhook received and queued for processing.\n\n` +
-            `You sent a \`${req.data.contentType}\` message via the ${trigger} trigger with the following data:\n\n` +
+        ? `Webhook received and queued for processing. Response sent immediately. Background processing continues for 3 seconds (check logs below).\n\n` +
+            `You sent a \`${req.data.contentType}\` message with the following data:\n\n` +
             '```json\n' +
             prompt +
             '\n```\n\n' +
             'Metadata:\n' +
             '```json\n' +
             JSON.stringify(req.metadata, null, 2) +
-            '\n```\n\n' +
-            'Response sent immediately. Background processing continues for 3 seconds (check logs).\n\n' +
-            'Note: Webhook IO responds immediately while processing continues asynchronously.'
+            '\n```'
         : `You sent a content type that isn't supported in this example`
     );
   } catch (error) {
     ctx.logger.error('Error processing webhook:', error);
+
     return new Response('Internal Server Error', { status: 500 });
   }
 }

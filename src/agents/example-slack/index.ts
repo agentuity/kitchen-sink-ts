@@ -24,6 +24,11 @@ export default async function Agent(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
+  // No manual trigger handling
+  if (req.trigger === 'manual') {
+    return resp.text('This agent only responds to Slack triggers.');
+  }
+
   // Verify Slack webhook and handle challenge/validation before processing the request
   const verificationResponse = await verifySlackWebhook(
     req as SlackAgentRequest,
@@ -108,7 +113,7 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Slack</span> example agent.\n\n### About\n\nThis agent demonstrates how to use the Slack API to have a conversation with the user.\n\n### Configuration\n\nCheck the agent README for instructions on how to create your own Slack bot and install it in your Slack workspace.\n\n### Testing\n\nTesting is not available in DevMode for this agent.\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a platform-specific example.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Slack</span> example agent.\n\n### About\n\nThis agent demonstrates how to use the Slack API to have a conversation with the user.\n\n### Configuration\n\nCheck the agent README for instructions on how to create your own Slack bot and install it in your Slack workspace.\n\n### Testing\n\n<span style="color: light-dark(#A00, #F66);">Testing is not available in DevMode for this agent.</span>\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a platform-specific example.`,
     prompts: [],
   };
 };
