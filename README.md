@@ -75,7 +75,7 @@ These are only needed for specific agent demonstrations:
 Each agent demonstrates specific Agentuity features. Here's what you can explore:
 
 | Agent | What It Demonstrates |
-|-------|----------------------|
+|:------|:---------------------|
 | **kitchen-sink** | Ask questions about any Agentuity feature |
 | **handler-request** | Access request data, content types, and triggers |
 | **handler-response** | Different response formats (text, images, streams, etc.) |
