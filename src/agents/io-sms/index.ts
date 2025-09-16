@@ -20,67 +20,49 @@ export default async function Agent(
    * Examples *
    ************/
 
-  const command = await req.data.text();
+  // Handle SMS trigger
+  if (req.trigger === 'sms') {
+    try {
+      // Get SMS data
+      const sms = await req.data.sms();
 
-  // Send basic SMS message
-  if (command === 'Send Basic SMS') {
-    if (req.trigger === 'manual') {
-      // Self-webhook pattern: DevMode (manual commands) call this agent's webhook to trigger SMS routing
-      ctx.logger.info(
-        'DevMode detected, triggering webhook for actual SMS delivery'
-      );
+      // Log received details
+      ctx.logger.info('Received SMS:', {
+        from: sms.from,
+        to: sms.to,
+        messageId: sms.messageId,
+      });
 
-      try {
-        const response = await fetch(
-          'https://agentuity.ai/webhook/ec172a94fefa741a46e5c1882f39dc99',
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain' },
-            body: 'Send Basic SMS Webhook', // Different command to avoid loops
-          }
-        );
+      // Extract content
+      const phoneNumber = sms.from;
+      const message = sms.text;
 
-        if (response.ok) {
-          ctx.logger.info('SMS sent successfully via webhook');
-          return resp.markdown(`## SMS Sent Successfully!
+      // Prepare reply message
+      const replyMessage = `You sent an SMS with the following message:\n\n"${message}"\n\nFrom: ${phoneNumber}`;
 
-**What happened:**
-1. DevMode detected your command
-2. Triggered webhook endpoint for actual SMS delivery
-3. SMS was sent to configured phone number
+      // Send a reply back
+      await sms.sendReply(req, ctx, replyMessage);
 
-Check your phone to see the text message!`);
-        } else {
-          throw new Error(`Webhook returned ${response.status}`);
-        }
-      } catch (error) {
-        ctx.logger.error('Self-webhook failed:', error);
-        return resp.text(
-          'Please deploy this agent with SMS configuration to enable SMS sending from DevMode.'
-        );
-      }
+      ctx.logger.info('SMS processed and reply sent successfully');
+      return resp.text('SMS processed and reply sent');
+    } catch (error) {
+      ctx.logger.error('Error processing SMS:', error);
+      return new Response('Internal Server Error', { status: 500 });
     }
   }
 
-  // Handle webhook self-call to prevent loops
-  if (command === 'Send Basic SMS Webhook') {
-    ctx.logger.info('Processing webhook self-call for SMS delivery');
-    return resp.text(
-      'Hello from Agentuity! This is a test SMS from the Kitchen Sink project.'
-    );
-  }
-
-  return resp.text('You sent an invalid message.');
+  // No manual trigger handling: SMS IO requires deployment
+  ctx.logger.info(
+    'SMS agent received non-SMS trigger, responding with info message'
+  );
+  return resp.text(
+    'This agent only responds to SMS triggers. Deploy with SMS IO configuration and Twilio phone number to test.'
+  );
 }
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">SMS IO</span> example agent.\n\n### About\n\nThis agent demonstrates SMS messaging via Twilio integration. Your agents can receive and send SMS messages, but this example focuses on outbound SMS.\n\n### Configuration\n\nCheck the agent README for instructions on setting up Twilio credentials.\n\n### Testing\n\nClick the command to send an SMS message to your configured phone number.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
-    prompts: [
-      {
-        data: 'Send Basic SMS',
-        contentType: 'text/plain',
-      },
-    ],
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">SMS IO</span> example agent.\n\n### About\n\nSMS IO enables agents to receive and respond to text messages via Twilio. When configured, your agent can process incoming SMS messages and send automatic replies.\n\n### Testing\n\nThis agent requires deployment with SMS IO configuration. Once deployed:\n1. Text your agent's Twilio phone number\n2. Receive an auto-reply with your message details\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    prompts: [], // No prompts (SMS IO cannot be tested in DevMode)
   };
 };
