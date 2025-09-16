@@ -2,9 +2,7 @@ import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { welcome as welcomeExampleChat } from '../example-chat';
 import { welcome as welcomeExampleComposio } from '../example-composio';
 import { welcome as welcomeExampleDiscord } from '../example-discord';
-import { welcome as welcomeExampleMicrosoftTeams } from '../example-microsoft-teams';
 import { welcome as welcomeExampleSlack } from '../example-slack';
-import { welcome as welcomeExampleTelegram } from '../example-telegram';
 import { welcome as welcomeFrameworksProvider } from '../frameworks-provider';
 import { welcome as welcomeGatewayByoToken } from '../gateway-byo-token';
 import { welcome as welcomeGatewayProvider } from '../gateway-provider';
@@ -50,9 +48,7 @@ export default async function Agent(
     { name: 'example-chat', welcome: welcomeExampleChat },
     { name: 'example-composio', welcome: welcomeExampleComposio },
     { name: 'example-discord', welcome: welcomeExampleDiscord },
-    { name: 'example-microsoft-teams', welcome: welcomeExampleMicrosoftTeams },
     { name: 'example-slack', welcome: welcomeExampleSlack },
-    { name: 'example-telegram', welcome: welcomeExampleTelegram },
     { name: 'frameworks-provider', welcome: welcomeFrameworksProvider },
     { name: 'gateway-byo-token', welcome: welcomeGatewayByoToken },
     { name: 'gateway-provider', welcome: welcomeGatewayProvider },

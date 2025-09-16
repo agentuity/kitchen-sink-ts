@@ -20,13 +20,11 @@ export default async function Agent(
   }
 
   try {
-    const eventData = await req.data.json();
-
     // Generate summary of the event
     const result = await generateText({
       model: openai('gpt-5-nano'),
-      system: `You are a notification assistant. Analyze this JSON event data and create a clear, concise summary for a Discord notification. Focus on what happened, why it matters, and any key details. Keep it under 200 characters.`,
-      prompt: JSON.stringify(eventData),
+      system: `You are a notification assistant. Analyze this JSON event's data and create a clear, concise summary for a Discord notification. Focus on what happened, why it matters, and any key details. Keep it under 200 characters.`,
+      prompt: await req.data.text(),
     });
 
     // Build payload
