@@ -39,9 +39,22 @@
    - Send JSON event data to your agent
    - Check your Discord channel for the sample notification
 
-## Example Usage
+## What This Agent Does
 
-This agent accepts any JSON payload and uses an LLM to create Discord notifications.
+This agent demonstrates Discord webhook message execution. It:
+
+1. **Accepts JSON event data** and analyzes it with an AI model
+2. **Creates rich Discord notifications** using embeds with custom styling
+3. **Sends formatted messages** to your Discord channel via webhook
+
+### Current Customizations
+
+The agent currently sends messages with:
+- **Custom username**: "Agentuity Agent"
+- **Rich embed** with title, description, and AI-generated summary
+- **Brand color**: Discord's blurple (`0x5865f2`)
+- **Footer**: "Powered by Agentuity"
+- **Timestamp**: Current time
 
 ### Sample Event Data
 
@@ -55,6 +68,33 @@ This agent accepts any JSON payload and uses an LLM to create Discord notificati
 }
 ```
 
-## Security Note
+## Discord Message Structure
 
-Never commit your webhook URL to version control. Always use environment variables to store sensitive configuration.
+When this agent sends data via webhook, Discord creates [Message Objects](https://discord.com/developers/docs/resources/message) with these auto-generated fields:
+
+- `id` - Unique message identifier
+- `channel_id` - Target channel ID
+- `webhook_id` - Your webhook's ID
+- `author` - Webhook user object (shows your custom username/avatar)
+- `timestamp` - When the message was sent
+- `type` - Message type (always `0` for simple webhook messages)
+
+## Message Customization Options
+
+You can modify the agent code to customize the webhook payload:
+
+**Message Content:**
+- `content` - Plain text message content (string)
+- `embeds` - Array of embed objects for rich formatting (currently used by this agent)
+- `tts` - Text-to-speech message (boolean)
+
+**Webhook Overrides:**
+- `username` - Override the webhook's default name
+- `avatar_url` - Override the webhook's avatar
+
+**Mentions (use these formats in `content` or embed descriptions):**
+- `@everyone` or `@here` - Mention everyone/online users
+- `<@user_id>` - Mention specific user (e.g., `<@123456789>`)
+- `<@&role_id>` - Mention specific role (e.g., `<@&987654321>`)
+- `<#channel_id>` - Link to channel (e.g., `<#456789123>`)
+- `allowed_mentions` - Object to control which mentions trigger notifications
