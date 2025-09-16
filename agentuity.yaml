@@ -136,15 +136,9 @@ agents:
   - id: agent_2ddc01490cd360ec3d1d594999bda18e
     name: example-slack
     description: Demonstrates how to integrate with a Slack bot
-  - id: agent_f3ac103e3f989bbadfe5a54bb7dd95f7
-    name: example-microsoft-teams
-    description: Demonstrates how to integrate with a Microsoft Teams bot
   - id: agent_0478e40d5b58b63070bf948f68f3c3a5
     name: example-discord
     description: Demonstrates how to integrate with a Discord bot
-  - id: agent_0d0bd733f6b691a1768b8f45f35ff4ea
-    name: example-telegram
-    description: Demonstrates how to integrate with a Telegram bot
   - id: agent_ea8541efc22cee1ba53bb03f18324a9e
     name: example-composio
     description: Demonstrates how to integrate with the Composio tool bridge
