@@ -103,7 +103,7 @@ Each agent demonstrates specific Agentuity features. Here's what you can explore
 
 ### Getting Help
 
-Run a simple "help" command from any agent for an overview of each feature. To ask specific questions about Agentuity features, use the `kitchen-sink` agent.
+Run a simple "help" command (from any agent besides the `example-*` agents) for an overview of each feature. To ask specific questions about Agentuity features, use the `kitchen-sink` agent.
 
 ### Following Along
 
@@ -115,7 +115,7 @@ Each agent explains what it's doing as it runs, making it easy to understand the
 
 ### Interactive Prompts
 
-Each agent suggests prompts when you first select it — just click to try them!
+Most of these agents (aside from the `example-*` agents) suggests prompts when you first select it — just click to try them!
 
 ## Deploy Your Own
 
