@@ -34,14 +34,17 @@ The Kitchen Sink is an interactive playground and reference implementation where
 
 1. **Deploy to your account** using the "*Deploy w/ Agentuity*" button at the top of this README. You'll have the option to copy the Kitchen Sink project to a public or private GitHub repository.
 2. **Customize agents** or add new ones in `src/agents/`.
-3. **Test locally** with `agentuity dev`.
-4. **Deploy your changes** with `agentuity deploy`
-5. **Set any required secrets** (if needed)
+3. **Test locally** with `agentuity dev`. 
+
+Follow the link shown in your terminal to launch *DevMode* in your browser. Select any agent and start exploring! 
+
+If you want to make changes or customize the Kitchen Sink agents:
+
+4. **Set any required secrets** (if needed)
 ```bash
 agentuity env set --secret OPENAI_API_KEY your-key-here
 ```
-
-After you deploy, follow the link shown in your terminal to launch DevMode in your browser. Select any agent and start exploring!
+5. **Deploy your changes** with `agentuity deploy`
 
 ## Prerequisites
 
