@@ -5,6 +5,7 @@ import type {
   Data,
 } from '@agentuity/sdk';
 import { openai } from '@ai-sdk/openai';
+import { WebClient } from '@slack/web-api';
 import { streamText } from 'ai';
 
 /*
@@ -101,18 +102,11 @@ export const handleHelpMessage = async (
   }
 };
 
-export const replaceCircularReferences = () => {
-  const seen = new WeakSet();
+export const handleError = (agent: string, prompt?: number) => {
+  const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
 
-  return (_key: string, value: unknown) => {
-    if (typeof value === 'object' && value !== null) {
-      if (seen.has(value)) {
-        return '[Circular]';
-      }
-
-      seen.add(value);
-    }
-
-    return value;
-  };
+  slack.chat.postMessage({
+    channel: process.env.SLACK_CHANNEL_ALERTS || '',
+    text: `Kitchen Sink test suite failed while running "${agent}" on prompt #${prompt || 0}`,
+  });
 };

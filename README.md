@@ -42,7 +42,7 @@ If you want to make changes or customize the Kitchen Sink agents:
 
 4. **Set any required secrets** (if needed)
 ```bash
-agentuity env set --secret OPENAI_API_KEY your-key-here
+agentuity env set --secret ANTHROPIC_API_KEY your-key-here
 ```
 5. **Deploy your changes** with `agentuity deploy`
 
@@ -59,7 +59,7 @@ agentuity env set --secret OPENAI_API_KEY your-key-here
 These are only needed for specific agent demonstrations:
 
 - **Object Storage bucket**: Only required for the "Object Store" agent demo. Create via the Agentuity Console from the *Infrastructure* section.
-- **`OPENAI_API_KEY`**: Only required for the "Bring-Your-Own-Token" agent demo. Set in your `.env` file locally.
+- **`ANTHROPIC_API_KEY`**: Only required for the "Bring-Your-Own-Token" agent demo. Set in your `.env` file locally.
 - **`COMPOSIO_API_KEY`**: Only required for the "Composio" agent demo. Sign up at [composio.dev](https://composio.dev/) to access hundreds of tool integrations. Set in your `.env` file locally.
 - **`DISCORD_WEBHOOK_URL`**: Only required for the "Discord" agent demo. Create a Discord webhook URL in your server's channel settings. Set in your `.env` file locally.
 - **`SLACK_SIGNING_SECRET`** and **`SLACK_BOT_TOKEN`**: Only required for the "Slack" agent demo. Create a Slack app with bot permissions and install it in your workspace. Set in your `.env` file locally.

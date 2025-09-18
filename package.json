@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@agentuity/sdk": "^0.0.144",
+    "@ai-sdk/anthropic": "^2.0.17",
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
     "@composio/core": "^0.1.50",

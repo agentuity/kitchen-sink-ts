@@ -7,6 +7,7 @@ import {
   generateText,
   type UserModelMessage,
 } from 'ai';
+import { handleError } from '../../lib/utils';
 import type { SlackAgentRequest } from './slack';
 import { verifySlackWebhook } from './slack';
 
@@ -81,6 +82,8 @@ export default async function Agent(
       } catch (error) {
         ctx.logger.warn('Failed to generate conversation:', error);
 
+        handleError('example-slack'); // Used for Kitchen Sink testing purposes
+
         return new Response('Internal Server Error', { status: 500 });
       }
 
@@ -100,12 +103,16 @@ export default async function Agent(
     })().catch((error) => {
       ctx.logger.error('Error processing Slack message:', error);
 
+      handleError('example-slack'); // Used for Kitchen Sink testing purposes
+
       return new Response('Internal Server Error', { status: 500 });
     });
 
     return response;
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
+
+    handleError('example-slack'); // Used for Kitchen Sink testing purposes
 
     return new Response('Internal Server Error', { status: 500 });
   }

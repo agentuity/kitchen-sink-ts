@@ -1,5 +1,5 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
-import { handleHelpMessage } from '../../lib/utils';
+import { handleError, handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
   req: AgentRequest,
@@ -57,6 +57,8 @@ ${textBody}`,
     }
   } catch (error) {
     ctx.logger.error('Error processing email:', error);
+
+    handleError('io-email'); // Used for Kitchen Sink testing purposes
 
     return new Response('Internal Server Error', { status: 500 });
   }

@@ -1,5 +1,5 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
-import { createOpenAI } from '@ai-sdk/openai';
+import { createAnthropic } from '@ai-sdk/anthropic';
 import { streamText } from 'ai';
 import { handleHelpMessage } from '../../lib/utils';
 
@@ -30,19 +30,19 @@ export default async function Agent(
   try {
     const prompt = await req.data.text();
 
-    const openai = await createOpenAI({
+    const anthropic = await createAnthropic({
       // Set this in your .env file(s)
       //
       // When deploying an agent, you'll need to run
-      //    agentuity env set --secret OPENAI_API_KEY sk-proj-...
+      //    agentuity env set --secret ANTHROPIC_API_KEY sk-ant-...
       // to set the secret in the cloud environment
       //
       // You can also set the key in the Agentuity web app in your project's settings
-      apiKey: process.env.OPENAI_API_KEY,
+      apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
     const result = await streamText({
-      model: openai('gpt-5-nano'),
+      model: anthropic('claude-3-5-haiku-20241022'),
       system:
         'You are a fantastic storyteller. Your story should be 50 words or less, in markdown format.',
       prompt,
