@@ -36,10 +36,15 @@ export default async function Agent(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
-  if (req.trigger !== 'cron' || (await req.data.text()) !== 'RUN') {
+  if (req.trigger === 'manual') {
     return resp.text(
       'This is a test suite for the Kitchen Sink project and is not intended to be run by users.\n\nProceeding to run the test suite may incur significant charges to your account.'
     );
+  }
+
+  if (req.trigger !== 'webhook' || (await req.data.text()) !== 'RUN') {
+    // if (req.trigger !== 'cron' || (await req.data.text()) !== 'RUN') {
+    return resp.empty();
   }
 
   const agents = [
@@ -78,7 +83,12 @@ export default async function Agent(
       const prompts = agent.welcome().prompts;
 
       for (const prompt of prompts) {
+        ctx.logger.info(
+          `Running prompt #${prompts.indexOf(prompt)} for agent ${agent.name}`
+        );
+
         currentPrompt = prompts.indexOf(prompt);
+
         await instance.run(prompt);
       }
     }
@@ -102,10 +112,12 @@ export default async function Agent(
       text: `Daily test message to <@${process.env.SLACK_BOT_ID}>. Please respond with a simple "Hello" to confirm you're working.`,
     });
 
+    ctx.logger.info('Test completed successfully');
+
     return resp.text('Test completed successfully');
   } catch (error) {
     ctx.logger.error(
-      `Test failed while running "${currentAgent}" on prompt #${currentPrompt}\n\n${error}`
+      `Test failed while running prompt #${currentPrompt} for agent ${currentAgent}\n\n${error}`
     );
 
     handleError(currentAgent, currentPrompt);

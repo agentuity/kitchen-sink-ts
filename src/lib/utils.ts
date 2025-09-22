@@ -107,6 +107,6 @@ export const handleError = (agent: string, prompt?: number) => {
 
   slack.chat.postMessage({
     channel: process.env.SLACK_CHANNEL_ALERTS || '',
-    text: `Kitchen Sink test suite failed while running "${agent}" on prompt #${prompt || 0}`,
+    text: `Kitchen Sink test suite failed while running prompt #${prompt || 0} for agent ${agent}`,
   });
 };
