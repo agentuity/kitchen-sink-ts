@@ -6,7 +6,7 @@
 # ------------------------------------------------
 
 # The version semver range required to run this project
-version: '>=0.0.166'
+version: ">=0.0.166"
 # The ID of the project which is automatically generated
 project_id: proj_2e801790c37b125c0565ea69bad3e9f4
 # The name of the project which is editable
@@ -50,9 +50,9 @@ deployment:
   # You should tune the resources for the deployment
   resources:
     # The memory requirements
-    memory: 350Mi
+    memory: 2Gi
     # The CPU requirements
-    cpu: 500M
+    cpu: 2000M
     # The disk size requirements
     disk: 250Mi
   # The deployment mode
@@ -68,9 +68,9 @@ bundler:
   agents:
     dir: src/agents
   ignore:
-    - '**/*'
-    - '!/.agentuity/**'
-    - '!/agentuity.yaml'
+    - "**/*"
+    - "!/.agentuity/**"
+    - "!/agentuity.yaml"
 # The agents that are part of this project
 agents:
   - # The ID of the Agent which is automatically generated

@@ -105,8 +105,10 @@ export const handleHelpMessage = async (
 export const handleError = (agent: string, prompt?: number) => {
   const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
 
-  slack.chat.postMessage({
-    channel: process.env.SLACK_CHANNEL_ALERTS || '',
-    text: `Kitchen Sink test suite failed while running prompt #${prompt || 0} for agent ${agent}`,
-  });
+  slack.chat
+    .postMessage({
+      channel: process.env.SLACK_CHANNEL_ALERTS || '',
+      text: `Kitchen Sink test suite failed while running prompt #${prompt || 0} for agent ${agent}`,
+    })
+    .catch((error) => console.error('Error sending Slack message:', error));
 };
