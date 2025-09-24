@@ -1,6 +1,7 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
+import testImage from '../../lib/test-image.png';
 import { handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
@@ -31,7 +32,7 @@ export default async function Agent(
 
   // Images
   if (prompt === 'Image') {
-    return resp.png(await Bun.file('./src/lib/test-image.png').arrayBuffer());
+    return resp.png(testImage);
   }
 
   // Plain-text
@@ -56,6 +57,7 @@ export default async function Agent(
   //     status: 500,
   //     statusText: 'Internal Server Error',
   //   });
+  //
   //   return new Response('Internal Server Error', { status: 500 });
   // }
 

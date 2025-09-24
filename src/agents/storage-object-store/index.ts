@@ -1,4 +1,5 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
+import testImage from '../../lib/test-image.png';
 import { handleHelpMessage } from '../../lib/utils';
 
 export default async function Agent(
@@ -68,11 +69,8 @@ export default async function Agent(
   // Store image file
   if (prompt === 'Image') {
     try {
-      const file = Bun.file('./src/lib/test-image.png');
-      const fileContent = await file.arrayBuffer();
-
       try {
-        await ctx.objectstore.put(bucket, key, fileContent, {
+        await ctx.objectstore.put(bucket, key, testImage, {
           contentType: 'image/png', // optional
           contentDisposition: 'attachment; filename="test-image.png"', // optional
         });
