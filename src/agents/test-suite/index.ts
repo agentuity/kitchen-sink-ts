@@ -42,8 +42,7 @@ export default async function Agent(
     );
   }
 
-  if (req.trigger !== 'webhook' || (await req.data.text()) !== 'RUN') {
-    // if (req.trigger !== 'cron' || (await req.data.text()) !== 'RUN') {
+  if (req.trigger !== 'cron' || (await req.data.text()) !== 'RUN') {
     return resp.empty();
   }
 
