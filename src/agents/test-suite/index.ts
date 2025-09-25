@@ -65,6 +65,8 @@ export default async function Agent(
     { name: 'storage-object-store', welcome: welcomeStorageObjectStore },
     { name: 'storage-vector', welcome: welcomeStorageVector },
     // { name: 'example-slack', welcome: welcomeExampleSlack },
+    // { name: 'example-teams', welcome: welcomeExampleTeams },
+    // { name: 'example-telegram', welcome: welcomeExampleTelegram },
     // { name: 'io-cron', welcome: welcomeIOCron },
     // { name: 'io-email', welcome: welcomeIOEmail },
     // { name: 'io-sms', welcome: welcomeIOSMS },
