@@ -73,9 +73,15 @@ export default async function Agent(
       messages: messages.map((m) => ({ role: m.role, content: m.content })),
     });
 
+    // Validate bot token
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    if (!token) {
+      throw new Error('TELEGRAM_BOT_TOKEN environment variable is required');
+    }
+
     // Send reply
     await sendTelegramMessage(
-      process.env.TELEGRAM_BOT_TOKEN!,
+      token,
       chatId,
       result.text,
       ctx,

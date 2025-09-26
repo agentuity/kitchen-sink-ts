@@ -145,9 +145,6 @@ agents:
   - id: agent_fee72e13a3fdc7f0783abd65220d352d
     name: test-suite
     description: Tests the functionality of all Kitchen Sink example agents
-  - id: agent_f3d645101de6ffa7bf228079d274fdf6
-    name: example-teams
-    description: Demonstrates how to integrate with a Microsoft Teams bot
   - id: agent_52f73139a881ee0e1cdfafb3c6404e70
     name: example-telegram
     description: Demonstrates how to integrate with a Telegram bot

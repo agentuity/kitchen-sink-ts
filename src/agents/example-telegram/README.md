@@ -74,8 +74,8 @@ Add your bot to a Telegram chat:
 
 This agent demonstrates Telegram bot integration with AI-powered conversations. It:
 
-1. **Receives webhook updates** from Telegram when users send messages
-2. **Maintains conversation history** using Agentuity's KV storage (last 10 messages per chat)
+1. **Receives webhook updates** from Telegram when you send a message
+2. **Maintains conversation history** using Agentuity's built-in KV storage (last 10 messages per chat)
 3. **Generates AI responses** using OpenAI's GPT models with conversation context
 4. **Sends replies** back to Telegram using the Bot API with proper message threading
 
@@ -100,7 +100,7 @@ Telegram sends webhook payloads as [Update objects](https://core.telegram.org/bo
 
 The agent uses Telegram's [sendMessage](https://core.telegram.org/bots/api#sendmessage) method with:
 - **Modern reply format**: `reply_parameters: { message_id }`
-- **Markdown support**: `parse_mode: 'Markdown'` for text formatting
+- **Plain text messages**: No `parse_mode` to avoid API errors from unescaped special characters in AI-generated content
 - **Error handling**: Proper API error response handling
 
 ## Rate Limits and Best Practices
