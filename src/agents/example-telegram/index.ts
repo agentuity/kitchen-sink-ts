@@ -1,7 +1,6 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { openai } from '@ai-sdk/openai';
 import { generateText } from 'ai';
-import { handleError } from '../../lib/utils';
 import { sendTelegramMessage, type TelegramUpdate } from './telegram';
 
 export default async function Agent(
@@ -49,15 +48,13 @@ export default async function Agent(
       }
     } catch (error) {
       ctx.logger.error('Error retrieving chat history:', error);
-
-      handleError('example-telegram'); // Used for Kitchen Sink testing purposes
     }
 
     // Add new message to history
     messages.push({
       role: 'user',
       content: update.message.text!,
-      timestamp: update.message.date,
+      timestamp: update.message.date, // Unix timestamp from Telegram API
     });
 
     // Keep last 10 messages
@@ -89,13 +86,11 @@ export default async function Agent(
     messages.push({
       role: 'assistant',
       content: result.text,
-      timestamp: Math.floor(Date.now() / 1000),
+      timestamp: Math.floor(Date.now() / 1000), // Unix timestamp to match Telegram API format
     });
     await ctx.kv.set('kitchen-sink', chatKey, messages, { ttl: 86400 });
   })().catch((error) => {
     ctx.logger.error('Async processing error:', error);
-
-    handleError('example-telegram'); // Used for Kitchen Sink testing purposes
   });
 
   return response;
