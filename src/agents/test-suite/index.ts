@@ -111,6 +111,12 @@ export default async function Agent(
       text: `Daily test message to <@${process.env.SLACK_BOT_ID}>. Please respond with a simple "Hello" to confirm you're working.`,
     });
 
+    // Tests complete
+    slack.chat.postMessage({
+      channel: process.env.SLACK_CHANNEL_ALERTS || '',
+      text: `✅ Kitchen Sink test suite completed successfully.`,
+    });
+
     ctx.logger.info('Test completed successfully');
 
     return resp.text('Test completed successfully');
