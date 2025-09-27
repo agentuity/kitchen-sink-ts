@@ -65,6 +65,8 @@ export default async function Agent(
     { name: 'storage-object-store', welcome: welcomeStorageObjectStore },
     { name: 'storage-vector', welcome: welcomeStorageVector },
     // { name: 'example-slack', welcome: welcomeExampleSlack },
+    // { name: 'example-teams', welcome: welcomeExampleTeams },
+    // { name: 'example-telegram', welcome: welcomeExampleTelegram },
     // { name: 'io-cron', welcome: welcomeIOCron },
     // { name: 'io-email', welcome: welcomeIOEmail },
     // { name: 'io-sms', welcome: welcomeIOSMS },
@@ -95,13 +97,16 @@ export default async function Agent(
     // Agents without prompts
 
     // io-cron
-    // The request of this agent comes via inbound cron IO automatically, nothing to do here
+    // The request of this agent comes via inbound cron IO automatically; nothing to do here
 
     // io-email
-    // The response of this agent is sent via outbound email IO automatically, nothing to do here
+    // The response of this agent is sent via outbound email IO automatically; nothing to do here
 
     // io-sms
-    // The response of this agent is sent via outbound SMS IO automatically, nothing to do here
+    // The response of this agent is sent via outbound SMS IO automatically; nothing to do here
+
+    // example-telegram
+    // Telegram bots cannot initiate conversations and the agent filters bot messages; nothing to do here
 
     // example-slack
     const slack = new WebClient(process.env.SLACK_USER_TOKEN);
