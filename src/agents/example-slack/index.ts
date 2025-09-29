@@ -25,35 +25,36 @@ export default async function Agent(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
-  // No manual trigger handling
-  if (req.trigger === 'manual') {
-    return resp.text('This agent only responds to Slack triggers.');
-  }
-
-  // Verify Slack webhook and handle challenge/validation before processing the request
-  const verificationResponse = await verifySlackWebhook(
-    req as SlackAgentRequest,
-    resp,
-    ctx
-  );
-
-  if (verificationResponse) {
-    return verificationResponse;
-  }
-
-  const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
-  const { event } = await req.data.object<{ event: GenericMessageEvent }>();
-  const threadTs = event.thread_ts ?? event.ts; // Acts as the UUID for the conversation
-
-  // Slack wants a fast 200 OK response, so we return that immediately
-  const response = resp.text('OK');
-
   try {
-    (async () => {
-      // Build conversation history from Slack thread
-      const messages: Message[] = [];
+    // No manual trigger handling
+    if (req.trigger === 'manual') {
+      return resp.text('This agent only responds to Slack triggers.');
+    }
 
+    // Verify Slack webhook and handle challenge/validation before processing the request
+    const verificationResponse = await verifySlackWebhook(
+      req as SlackAgentRequest,
+      resp,
+      ctx
+    );
+
+    if (verificationResponse) {
+      return verificationResponse;
+    }
+
+    const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
+    const { event } = await req.data.object<{ event: GenericMessageEvent }>();
+    const threadTs = event.thread_ts ?? event.ts; // Acts as the UUID for the conversation
+
+    // Slack wants a fast 200 OK response, so we return that immediately
+    const response = resp.text('OK');
+
+    //Use waitUntil to proccess message in the background
+    ctx.waitUntil(async () => {
       try {
+        // Build conversation history from Slack thread
+        const messages: Message[] = [];
+
         // Determine if this is a thread reply or a new message
         if (threadTs !== event.ts) {
           // This is a thread reply, get all thread messages
@@ -79,41 +80,31 @@ export default async function Agent(
             content: event.text || '',
           });
         }
+
+        // Generate a reply
+        const result = await generateText({
+          model: openai('gpt-5-mini'),
+          system: `You are a helpful Slack bot assistant that can have a conversation with the user. Try to limit your response length.`,
+          messages,
+        });
+
+        // Post reply to Slack thread
+        await slack.chat.postMessage({
+          channel: event.channel,
+          thread_ts: threadTs,
+          text: result.text,
+        });
       } catch (error) {
-        ctx.logger.warn('Failed to generate conversation:', error);
-
+        ctx.logger.error('Error processing Slack message:', error);
         handleError('example-slack'); // Used for Kitchen Sink testing purposes
-
-        return new Response('Internal Server Error', { status: 500 });
+        // Error contained in background task - let it complete gracefully without throwing
       }
-
-      // Generate a reply
-      const result = await generateText({
-        model: openai('gpt-5-mini'),
-        system: `You are a helpful Slack bot assistant that can have a conversation with the user. Try to limit your response length.`,
-        messages,
-      });
-
-      // Post reply to Slack thread
-      await slack.chat.postMessage({
-        channel: event.channel,
-        thread_ts: threadTs,
-        text: result.text,
-      });
-    })().catch((error) => {
-      ctx.logger.error('Error processing Slack message:', error);
-
-      handleError('example-slack'); // Used for Kitchen Sink testing purposes
-
-      return new Response('Internal Server Error', { status: 500 });
     });
 
     return response;
   } catch (error) {
     ctx.logger.error('Error running agent:', error);
-
     handleError('example-slack'); // Used for Kitchen Sink testing purposes
-
     return new Response('Internal Server Error', { status: 500 });
   }
 }
