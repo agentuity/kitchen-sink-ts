@@ -67,6 +67,8 @@ export default async function Agent(
     // { name: 'example-slack', welcome: welcomeExampleSlack },
     // { name: 'example-teams', welcome: welcomeExampleTeams },
     // { name: 'example-telegram', welcome: welcomeExampleTelegram },
+    // { name: 'example-llm-judge', welcome: welcomeExampleLLMJudge },
+    // { name: 'example-streaming', welcome: welcomeExampleStreaming },
     // { name: 'io-cron', welcome: welcomeIOCron },
     // { name: 'io-email', welcome: welcomeIOEmail },
     // { name: 'io-sms', welcome: welcomeIOSMS },
@@ -107,6 +109,9 @@ export default async function Agent(
 
     // example-telegram
     // Telegram bots cannot initiate conversations and the agent filters bot messages; nothing to do here
+
+    // example-llm-judge
+    // This agent simply extends the gateway-provider agent to show the LLM-as-a-judge pattern; nothing to do here
 
     // example-slack
     const slack = new WebClient(process.env.SLACK_USER_TOKEN);

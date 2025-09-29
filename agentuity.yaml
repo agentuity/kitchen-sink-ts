@@ -148,3 +148,9 @@ agents:
   - id: agent_52f73139a881ee0e1cdfafb3c6404e70
     name: example-telegram
     description: Demonstrates how to integrate with a Telegram bot
+  - id: agent_c38f9a6d8d3edc6bde56047cbfd16c6f
+    name: example-streaming
+    description: Demonstrates advanced agent streaming patterns
+  - id: agent_4268cac212e32dae1f6a7c394d2c6b9d
+    name: example-llm-judge
+    description: Demonstrates LLM-as-a-judge pattern for evaluating AI outputs
