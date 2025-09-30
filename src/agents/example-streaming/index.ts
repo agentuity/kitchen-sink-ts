@@ -75,11 +75,12 @@ export default async function Agent(
             };
 
             // Write JSON data with newline delimiter
-            const chunk = `${JSON.stringify(progressData)}\n`;
-            await writer.write(new TextEncoder().encode(chunk));
+            // Note: The SDK automatically handles encoding - you can pass strings, objects, or Uint8Array
+            // Here we manually stringify to add a newline delimiter for streaming JSON
+            await writer.write(`${JSON.stringify(progressData)}\n`);
 
-            // Simulate processing time
-            await new Promise((resolve) => setTimeout(resolve, 2000));
+            // Simulate processing time (4 second delay to show streaming)
+            await new Promise((resolve) => setTimeout(resolve, 4000));
           }
 
           ctx.logger.info('Order processing batch completed');
