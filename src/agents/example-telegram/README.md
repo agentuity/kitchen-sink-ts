@@ -32,7 +32,7 @@ BotFather will provide you with a **Bot Token**. Copy this token - you'll need i
 Set the bot token in your Agentuity project:
 
 For local development, add to your `.env` file:
-```
+```env
 TELEGRAM_BOT_TOKEN=1234567890:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghi
 ```
 

@@ -103,6 +103,6 @@ export default async function Agent(
 }
 
 export const welcome = () => ({
-  welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Telegram</span> example agent.\n\n### About\n\nThis agent demonstrates how to create a Telegram bot that can have AI-powered conversations with users through webhooks.\n\n### Testing\n\nTesting is not available in DevMode for this agent. Add your bot to a Telegram chat to test.\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a platform-specific example.`,
+  welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Telegram</span> example agent.\n\n### About\n\nThis agent demonstrates how to create a Telegram bot that can have AI-powered conversations using webhooks.\n\n### Testing\n\nTesting is not available in DevMode for this agent. Add your bot to a Telegram chat to test.\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a platform-specific example.`,
   prompts: [],
 });

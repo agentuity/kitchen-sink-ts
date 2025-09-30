@@ -41,7 +41,7 @@ This example uses the HackerNews toolkit, but Composio offers many more, includi
    ![Composio project settings showing API key](/.github/example-composio/composio-setup-2-api-key.png)
    
    Copy the API key and add it to your `.env` file:
-   ```
+   ```env
    COMPOSIO_API_KEY=your-api-key-here
    ```
    
