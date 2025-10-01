@@ -26,7 +26,7 @@
 2. **Configure Environment Variable**
    
    For local development, add to your `.env` file:
-   ```
+   ```env
    DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_WEBHOOK_ID/YOUR_WEBHOOK_TOKEN
    ```
    
