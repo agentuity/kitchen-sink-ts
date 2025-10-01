@@ -2,7 +2,6 @@ import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { openai } from '@ai-sdk/openai';
 import { streamText } from 'ai';
 import { handleHelpMessage } from '../../lib/utils';
-import SAMPLE_ORDERS from './sample-data.json';
 
 export default async function Agent(
   req: AgentRequest,
@@ -25,149 +24,7 @@ export default async function Agent(
 
   const prompt = await req.data.text();
 
-  // Manual Progress - demonstrates ctx.stream.create() with manual writes
-  if (prompt === 'Manual Progress') {
-    try {
-      ctx.logger.info('Starting manual progress streaming example');
-
-      // Create a stream with a name and optional metadata
-      const stream = await ctx.stream.create('order-processing', {
-        contentType: 'application/json',
-        metadata: {
-          type: 'order-processing',
-          batchSize: SAMPLE_ORDERS.length.toString(),
-          startTime: new Date().toISOString(),
-          requestId: ctx.sessionId,
-        },
-      });
-
-      ctx.logger.info('Stream created', {
-        streamId: stream.id,
-        streamUrl: stream.url,
-      });
-
-      // Use waitUntil for background processing
-      ctx.waitUntil(async () => {
-        // Get a writer from the WritableStream
-        const writer = stream.getWriter();
-
-        try {
-          // Process orders with manual stream writes
-          for (let i = 0; i < SAMPLE_ORDERS.length; i++) {
-            const order = SAMPLE_ORDERS[i];
-            if (!order) continue;
-
-            ctx.logger.info(
-              `Processing order ${order.id} for ${order.customer}`
-            );
-
-            const progressData = {
-              step: i + 1,
-              total: SAMPLE_ORDERS.length,
-              progress: Math.round(((i + 1) / SAMPLE_ORDERS.length) * 100),
-              message: `Processing ${order.id} for ${order.customer}`,
-              orderDetails: {
-                items: order.items,
-                total: order.total,
-                priority: order.priority,
-              },
-              timestamp: new Date().toISOString(),
-            };
-
-            // Write JSON data with newline delimiter
-            // Note: The SDK automatically handles encoding - you can pass strings, objects, or Uint8Array
-            // Here we manually stringify to add a newline delimiter for streaming JSON
-            await writer.write(`${JSON.stringify(progressData)}\n`);
-
-            // Simulate processing time (4 second delay to show streaming)
-            await new Promise((resolve) => setTimeout(resolve, 4000));
-          }
-
-          ctx.logger.info('Order processing batch completed');
-        } finally {
-          // Always release the lock and close the stream
-          writer.releaseLock();
-          await stream.close();
-        }
-      });
-
-      // Return stream info immediately (non-blocking)
-      return resp.json({
-        streamId: stream.id,
-        streamUrl: stream.url,
-        status: 'processing',
-        message:
-          'Order processing started. Stream URL can be consumed multiple times.',
-      });
-    } catch (error) {
-      ctx.logger.error('Error in manual progress streaming:', error);
-      return resp.text('Sorry, there was an error processing your request.');
-    }
-  }
-
-  // Background Stream - demonstrates LLM streaming with pipeTo
-  if (prompt === 'Background Stream') {
-    try {
-      ctx.logger.info('Starting background LLM streaming example');
-
-      // Create a stream with a name and optional metadata
-      const stream = await ctx.stream.create('llm-response', {
-        contentType: 'text/markdown',
-        metadata: {
-          type: 'llm-response',
-          model: 'gpt-5-nano',
-          requestId: ctx.sessionId,
-        },
-      });
-
-      ctx.logger.info('Stream created', {
-        streamId: stream.id,
-        streamUrl: stream.url,
-      });
-
-      // Use waitUntil to handle streaming in the background
-      ctx.waitUntil(async () => {
-        try {
-          const result = streamText({
-            model: openai('gpt-5-nano'),
-            system:
-              'You are a helpful assistant that provides concise and accurate information.',
-            prompt:
-              'Write a short business report about Q3 2025 performance with sections for Executive Summary, Revenue Analysis, and Key Metrics. Use markdown formatting.',
-          });
-
-          // Pipe the text stream to our created stream
-          await result.textStream.pipeTo(stream);
-
-          ctx.logger.info('LLM streaming completed');
-        } catch (error) {
-          ctx.logger.error('Error in LLM streaming:', error);
-          // Close the stream even if there's an error
-          await stream.close();
-        }
-      });
-
-      /**
-       * Return stream info immediately (non-blocking)
-       *
-       * Note: You could also return the stream directly with `return stream`
-       * This would automatically redirect the client to the stream URL
-       * instead of returning JSON with the stream info
-       */
-      return resp.json({
-        streamId: stream.id,
-        streamUrl: stream.url,
-        status: 'streaming',
-        message:
-          'LLM generation started. Stream URL will show AI response as it generates.',
-      });
-    } catch (error) {
-      ctx.logger.error('Error in background streaming:', error);
-      return resp.text('Sorry, there was an error processing your request.');
-    }
-  }
-
-  // Agent Chain - demonstrates agent-to-agent streaming with resp.stream()
+  // Agent-to-agent streaming with resp.stream()
   if (prompt === 'Agent Chain') {
     try {
       ctx.logger.info('Initiating agent chain: calling example-chat');
@@ -176,7 +33,7 @@ export default async function Agent(
       const chatAgent = await ctx.getAgent({ name: 'example-chat' });
 
       ctx.logger.debug(
-        'Requesting streaming benefits explanation from example-chat agent'
+        'Requesting "streaming benefits" explanation from example-chat agent'
       );
 
       // Call the agent with a custom prompt about streaming
@@ -203,23 +60,181 @@ export default async function Agent(
     }
   }
 
+  // LLM streaming with pipeTo
+  if (prompt === 'LLM Streaming') {
+    try {
+      ctx.logger.info('Starting LLM streaming with company overview');
+
+      // Fetch Agentuity company information
+      const response = await fetch('https://agentuity.com/llms.txt');
+      const companyInfo = await response.text();
+
+      // Create a stream with metadata
+      const stream = await ctx.stream.create('llm-summary', {
+        contentType: 'text/markdown',
+        metadata: {
+          type: 'llm-generation',
+          model: 'gpt-5-nano',
+          requestId: ctx.sessionId,
+        },
+      });
+
+      ctx.logger.info('Stream created', {
+        streamId: stream.id,
+        streamUrl: stream.url,
+      });
+
+      // Use waitUntil to handle streaming in the background
+      ctx.waitUntil(async () => {
+        try {
+          const result = streamText({
+            model: openai('gpt-4o-mini'),
+            system:
+              'You are a technical writer creating executive summaries. Write in a professional, detailed style.',
+            prompt: `Based on this company information, write a detailed executive summary (4-5 paragraphs) covering:\n1. Overview and core value proposition\n2. Key features and capabilities\n3. Benefits for developers and teams\n4. Target users and use cases\n5. Unique advantages\n\nCompany Information:\n${companyInfo}`,
+          });
+
+          // Pipe the text stream to our created stream
+          await result.textStream.pipeTo(stream);
+
+          ctx.logger.info('LLM streaming completed');
+        } catch (error) {
+          ctx.logger.error('Error in LLM streaming:', error);
+          // Close the stream even if there's an error
+          await stream.close();
+        }
+      });
+
+      /**
+       * Return stream info immediately (non-blocking)
+       *
+       * Note: You could also return the stream directly with `return stream`
+       * This would automatically redirect the client to the stream URL
+       * instead of returning JSON with the stream info
+       */
+      return resp.json({
+        streamId: stream.id,
+        streamUrl: stream.url,
+        status: 'streaming',
+        message:
+          'Generating executive summary from company overview. Stream URL will show AI response as it generates.',
+      });
+    } catch (error) {
+      ctx.logger.error('Error in LLM streaming:', error);
+      return resp.text('Sorry, there was an error processing your request.');
+    }
+  }
+
+  // Low-level (manual) streaming: stream.write() with progress tracking
+  if (prompt === 'Manual Streaming') {
+    try {
+      ctx.logger.info('Starting batch processing example');
+
+      // Generate a batch of items to process
+      const batchSize = 100;
+      const items = Array.from({ length: batchSize }, (_, i) => ({
+        id: `item-${String(i + 1).padStart(3, '0')}`,
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        data: {
+          value: Math.random() * 1000,
+          category: ['A', 'B', 'C', 'D'][i % 4],
+          priority: ['low', 'medium', 'high'][i % 3],
+        },
+      }));
+
+      // Create a stream with compression enabled
+      const stream = await ctx.stream.create('batch-processing', {
+        contentType: 'application/json',
+        compress: true, // Enable automatic gzip compression
+        metadata: {
+          type: 'batch-processing',
+          batchSize: String(batchSize),
+          startTime: new Date().toISOString(),
+          requestId: ctx.sessionId,
+        },
+      });
+
+      ctx.logger.info('Stream created for batch processing', {
+        streamId: stream.id,
+        streamUrl: stream.url,
+        compressed: stream.compressed,
+        itemCount: batchSize,
+      });
+
+      // Use waitUntil for background processing
+      ctx.waitUntil(async () => {
+        try {
+          for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+            if (!item) continue;
+
+            // Simulate processing
+            const processedItem = {
+              ...item,
+              status: 'completed',
+              processedAt: new Date().toISOString(),
+            };
+
+            // Use stream.write() directly - no writer management needed
+            // The SDK handles writer acquisition and locking automatically
+            await stream.write(`${JSON.stringify(processedItem)}\n`);
+
+            // Simulate processing time (100-300ms per item, avg 200ms)
+            await new Promise((resolve) =>
+              setTimeout(resolve, 100 + Math.random() * 200)
+            );
+
+            // Log progress periodically (every 10 items)
+            if ((i + 1) % 10 === 0) {
+              ctx.logger.info(
+                `Batch progress: ${i + 1}/${items.length} items, ${stream.bytesWritten} bytes written`
+              );
+            }
+          }
+
+          ctx.logger.info(
+            `Batch processing complete: ${items.length}/${items.length} items, ${stream.bytesWritten} bytes (uncompressed), compression: ${stream.compressed ? 'enabled' : 'disabled'}`
+          );
+        } finally {
+          // Always close the stream when done
+          await stream.close();
+        }
+      });
+
+      // Return stream info immediately (non-blocking)
+      return resp.json({
+        streamId: stream.id,
+        streamUrl: stream.url,
+        status: 'processing',
+        compressed: stream.compressed,
+        itemCount: batchSize,
+        message:
+          'Batch processing started with compression. Stream URL can be consumed multiple times. To verify compression: curl -I [stream-url] (look for the content-encoding: gzip header).',
+      });
+    } catch (error) {
+      ctx.logger.error('Error in batch processing:', error);
+      return resp.text('Sorry, there was an error processing your request.');
+    }
+  }
+
   return resp.text('You sent an invalid message.');
 }
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Streaming</span> example agent.\n\n### About\n\nThis agent demonstrates real-time streaming patterns. Learn manual stream control with \`ctx.stream.create()\`, background processing with \`ctx.waitUntil()\`, and high-level streaming with \`resp.stream()\`.\n\nLearn more: [Streaming Guide](https://agentuity.dev/Guides/agent-streaming)\n\n### Testing\n\nChoose a streaming pattern below to see different approaches to real-time data delivery.\n\n### Questions?\n\nYou can type "help" at any time to learn more about streaming capabilities, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Streaming</span> example agent.\n\n### About\n\nThis agent demonstrates real-time streaming patterns from high-level to low-level control. Learn agent chaining with \`resp.stream()\`, LLM integration with \`pipeTo()\`, and manual control with \`stream.write()\`.\n\nLearn more: [Streaming Guide](https://agentuity.dev/Guides/agent-streaming)\n\n### Testing\n\nChoose a streaming pattern below to see different approaches to real-time data delivery.\n\n### Questions?\n\nYou can type "help" at any time to learn more about streaming capabilities, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
     prompts: [
       {
-        data: 'Manual Progress',
-        contentType: 'text/plain',
-      },
-      {
-        data: 'Background Stream',
-        contentType: 'text/plain',
-      },
-      {
         data: 'Agent Chain',
+        contentType: 'text/plain',
+      },
+      {
+        data: 'LLM Streaming',
+        contentType: 'text/plain',
+      },
+      {
+        data: 'Manual Streaming',
         contentType: 'text/plain',
       },
     ],
