@@ -114,12 +114,12 @@ export default async function Agent(
     // Tests complete
     slack.chat.postMessage({
       channel: process.env.SLACK_CHANNEL_ALERTS || '',
-      text: `✅ Kitchen Sink test suite completed successfully.`,
+      text: `✅ Test suite completed successfully.`,
     });
 
-    ctx.logger.info('Test completed successfully');
+    ctx.logger.info('Test suite completed successfully');
 
-    return resp.text('Test completed successfully');
+    return resp.text('Test suite completed successfully');
   } catch (error) {
     ctx.logger.error(
       `Test failed while running prompt #${currentPrompt} for agent ${currentAgent}\n\n${error}`
@@ -127,6 +127,6 @@ export default async function Agent(
 
     handleError(currentAgent, currentPrompt);
 
-    return new Response('Kitchen Sink test suite failed.', { status: 500 });
+    return new Response('Test suite failed.', { status: 500 });
   }
 }
