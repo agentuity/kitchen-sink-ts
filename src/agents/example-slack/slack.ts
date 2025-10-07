@@ -93,7 +93,7 @@ export async function verifySlackWebhook(
     // biome-ignore lint/suspicious/noExplicitAny: Slack type def is missing user_id
     const botProfile = eventData.event.bot_profile as any;
 
-    if (botProfile.user_id && botProfile.user_id === eventData.event.user) {
+    if (botProfile?.user_id === eventData.event.user) {
       ctx.logger.debug('Message from the agent itself');
 
       return resp.empty();
