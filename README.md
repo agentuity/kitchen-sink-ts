@@ -14,7 +14,7 @@
 
 Test drive the complete Agentuity SDK in minutes — no docs required!
 
-**[Watch the Video Walkthrough](https://youtu.be/gcxqdMWY-x4)** - See the Kitchen Sink in action with a guided tour of key agents and features.
+**Get started: [Watch the video walkthrough](https://youtu.be/gcxqdMWY-x4)** for a guided tour of key agents and features.
 
 ## What is the Kitchen Sink?
 
