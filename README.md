@@ -14,6 +14,8 @@
 
 Test drive the complete Agentuity SDK in minutes — no docs required!
 
+**[Watch the Video Walkthrough](https://youtu.be/gcxqdMWY-x4)** - See the Kitchen Sink in action with a guided tour of key agents and features.
+
 ## What is the Kitchen Sink?
 
 The Kitchen Sink is an interactive playground and reference implementation where you can:
@@ -32,19 +34,33 @@ The Kitchen Sink is an interactive playground and reference implementation where
 
 ## Quick Start
 
-1. **Deploy to your account** using the "*Deploy w/ Agentuity*" button at the top of this README. You'll have the option to copy the Kitchen Sink project to a public or private GitHub repository.
-2. **Customize agents** or add new ones in `src/agents/`.
-3. **Test locally** with `agentuity dev`. 
+1. **Fork this repository** to your GitHub account
+2. **Clone your fork** locally:
+```bash
+git clone https://github.com/YOUR-USERNAME/kitchen-sink-ts.git
+cd kitchen-sink-ts
+```
+3. **Install dependencies**:
+```bash
+bun install
+```
+4. **Run locally** to test agents in DevMode:
+```bash
+agentuity dev
+```
+Follow the link shown in your terminal to launch *DevMode* in your browser. Select any agent and start exploring!
 
-Follow the link shown in your terminal to launch *DevMode* in your browser. Select any agent and start exploring! 
+5. **Customize agents** or add new ones in `src/agents/`
 
-If you want to make changes or customize the Kitchen Sink agents:
-
-4. **Set any required secrets** (if needed)
+6. **Set any required secrets** (if needed for specific agents):
 ```bash
 agentuity env set --secret ANTHROPIC_API_KEY your-key-here
 ```
-5. **Deploy your changes** with `agentuity deploy`
+
+7. **Deploy to Agentuity** with `agentuity deploy`
+   - Optionally, enable auto-deployments via GitHub integration from the Agentuity Console (under `settings/integrations/github`)
+
+**Alternatively**, you can use the "*Deploy w/ Agentuity*" button at the top of this README for a faster setup.
 
 ## Prerequisites
 
@@ -129,6 +145,7 @@ kitchen-sink-ts/
 
 ## Resources
 
+- **Video Tutorial**: [Kitchen Sink Walkthrough](https://youtu.be/gcxqdMWY-x4)
 - **Documentation**: [agentuity.dev](https://agentuity.dev)
 - **JavaScript SDK Reference**: [JavaScript SDK](https://agentuity.dev/SDKs/javascript)
 - **Python SDK Reference**: [Python SDK](https://agentuity.dev/SDKs/python)

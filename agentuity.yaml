@@ -54,7 +54,7 @@ deployment:
     # The CPU requirements
     cpu: 2000M
     # The disk size requirements
-    disk: 250Mi
+    disk: 650Mi
   # The deployment mode
   mode:
     # on-demand or provisioned
