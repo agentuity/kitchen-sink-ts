@@ -66,7 +66,7 @@ agentuity env set --secret ANTHROPIC_API_KEY your-key-here
 
 ### Required
 
-- **Bun**: Version 1.2.4 or higher
+- **[Bun](https://bun.com/docs/installation)**: Version 1.2.4 or higher
 - **Agentuity CLI**: Install with `npm install -g @agentuity/cli`
 - **Agentuity account**: Sign up at [agentuity.com](https://app.agentuity.com/sign-up)
 
