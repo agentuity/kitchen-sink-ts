@@ -52,7 +52,7 @@ Follow the link shown in your terminal to launch *DevMode* in your browser. Sele
 
 5. **Customize agents** or add new ones in `src/agents/`
 
-6. **Set any required secrets** (if needed for specific agents):
+6. **Set any required secrets** (if needed):
 ```bash
 agentuity env set --secret ANTHROPIC_API_KEY your-key-here
 ```
