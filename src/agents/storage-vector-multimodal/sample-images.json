@@ -1,0 +1,38 @@
+[
+  {
+    "id": "mountain-sunset",
+    "filename": "mountain-sunset.jpg",
+    "description": "A breathtaking mountain sunset with orange and purple sky reflecting on a serene alpine lake",
+    "tags": ["nature", "landscape", "mountains", "sunset", "water"]
+  },
+  {
+    "id": "city-night",
+    "filename": "city-night.jpg",
+    "description": "Urban cityscape at night with illuminated skyscrapers and bustling streets filled with car lights",
+    "tags": ["urban", "city", "night", "lights", "architecture"]
+  },
+  {
+    "id": "beach-sunrise",
+    "filename": "beach-sunrise.jpg",
+    "description": "Peaceful beach at sunrise with golden light, gentle waves, and seagulls flying over the ocean",
+    "tags": ["beach", "ocean", "sunrise", "nature", "peaceful"]
+  },
+  {
+    "id": "forest-path",
+    "filename": "forest-path.jpg",
+    "description": "Winding forest path through tall green trees with dappled sunlight filtering through the canopy",
+    "tags": ["forest", "nature", "trees", "path", "sunlight"]
+  },
+  {
+    "id": "desert-dunes",
+    "filename": "desert-dunes.jpg",
+    "description": "Vast desert landscape with golden sand dunes under a clear blue sky and strong afternoon shadows",
+    "tags": ["desert", "sand", "dunes", "landscape", "nature"]
+  },
+  {
+    "id": "waterfall",
+    "filename": "waterfall.jpg",
+    "description": "Powerful waterfall cascading down rocky cliffs surrounded by lush tropical vegetation and mist",
+    "tags": ["waterfall", "nature", "tropical", "water", "landscape"]
+  }
+]
