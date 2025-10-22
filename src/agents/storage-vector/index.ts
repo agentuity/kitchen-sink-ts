@@ -28,9 +28,12 @@ export default async function Agent(
 
   try {
     const prompt = await req.data.text();
+    ctx.logger.info(`Processing search query: "${prompt}"`);
 
     // Upsert sample products data
+    ctx.logger.info(`Upserting ${sampleProducts.length} sample products to vector store bucket: ${bucket}`);
     for (const product of sampleProducts) {
+      ctx.logger.debug(`Upserting product: ${product.sku} - ${product.name}`);
       await ctx.vector.upsert(bucket, {
         key: product.sku,
         // Product description converted to embeddings for feature-based semantic search
@@ -40,13 +43,20 @@ export default async function Agent(
         metadata: product,
       });
     }
+    ctx.logger.info('Successfully upserted all sample products to vector store');
 
     // Search for products: returns array with similarity scores (0-1)
+    ctx.logger.info(`Searching vector store for query: "${prompt}" with limit: 3, similarity threshold: 0.3`);
     const productResults = await ctx.vector.search(bucket, {
       query: prompt,
       limit: 3, // Get top 3 matches
       similarity: 0.3, // Minimum similarity threshold
     });
+    ctx.logger.info(`Vector search returned ${productResults.length} results`);
+
+    if (productResults.length > 0) {
+      ctx.logger.debug('Search results:', productResults.map(r => ({ sku: r.metadata?.sku, name: r.metadata?.name, similarity: r.similarity })));
+    }
 
     // Return top 3 products if we found any matches
     if (productResults.length > 0) {
@@ -68,6 +78,8 @@ export default async function Agent(
           return `${product?.name}: SKU ${product?.sku}, \\$${product?.price}, ${product?.avg_rating} rating, ${product?.customer_feedback}`;
         })
         .join('\n');
+
+      ctx.logger.info(`Context for LLM prompt: ${context}`);
 
       // Generate brief recommendation using LLM
       const result = await generateObject({
@@ -99,10 +111,12 @@ export default async function Agent(
 
       // Use vector.get() to fetch full details of the recommended product result, using its key
       if (customerReviewsSKU) {
+        ctx.logger.info(`Fetching product details from vector store for SKU: ${customerReviewsSKU}`);
         const topProductDetail = await ctx.vector.get(
           bucket,
           customerReviewsSKU
         );
+        ctx.logger.debug(`Retrieved product details: ${topProductDetail?.metadata?.name || 'not found'}`);
 
         if (topProductDetail?.metadata?.customer_feedback) {
           response += '\n\n';
@@ -112,12 +126,16 @@ export default async function Agent(
       }
 
       // Delete all entries we created once we're done with the demo
+      ctx.logger.info(`Cleaning up: deleting ${sampleProducts.length} products from vector store`);
       for (const product of sampleProducts) {
+        ctx.logger.debug(`Deleting product: ${product.sku}`);
         await ctx.vector.delete(bucket, product.sku);
       }
+      ctx.logger.info('Successfully cleaned up all sample products from vector store');
 
       return resp.markdown(response);
     } else {
+      ctx.logger.warn(`No products found matching search query: "${prompt}" with similarity threshold 0.3`);
       return resp.markdown(
         'No chairs found matching your search. Try:\n' +
           '• "comfortable office chair"\n' +

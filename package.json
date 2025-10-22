@@ -28,7 +28,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@agentuity/sdk": "^0.0.144",
+    "@agentuity/sdk": "^0.0.156",
     "@ai-sdk/google": "^2.0.11",
     "@ai-sdk/openai": "^2.0.23",
     "@composio/core": "^0.1.50",
@@ -36,9 +36,11 @@
     "@mastra/core": "^0.15.2",
     "@slack/types": "^2.16.0",
     "@slack/web-api": "^7.10.0",
+    "@xenova/transformers": "^2.17.2",
     "ai": "^5.0.29",
     "crypto": "^1.0.1",
-    "source-map-js": "^1.2.1"
+    "source-map-js": "^1.2.1",
+    "voyageai": "^0.0.8"
   },
   "module": "index.ts"
 }

@@ -151,3 +151,5 @@ agents:
   - id: agent_fee72e13a3fdc7f0783abd65220d352d
     name: test-suite
     description: Tests the functionality of all Kitchen Sink example agents
+  - id: agent_64be5b9b5ee437aab7326999cd1b2e78
+    name: storage-vector-multimodal
