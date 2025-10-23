@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "{MICROSOFT_APP_ID}",
+  "developer": {
+    "name": "Your Name or Company",
+    "websiteUrl": "https://example.com",
+    "privacyUrl": "https://example.com/privacy",
+    "termsOfUseUrl": "https://example.com/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "Kitchen Sink Bot",
+    "full": "Kitchen Sink Teams Bot"
+  },
+  "description": {
+    "short": "AI assistant bot built with Agentuity",
+    "full": "An AI-powered conversational assistant demonstrating Microsoft Teams integration with the Agentuity platform."
+  },
+  "accentColor": "#FFFFFF",
+  "bots": [
+    {
+      "botId": "{MICROSOFT_APP_ID}",
+      "scopes": ["personal", "team", "groupchat"],
+      "supportsFiles": false,
+      "isNotificationOnly": false
+    }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": []
+}

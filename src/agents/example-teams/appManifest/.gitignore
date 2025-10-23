@@ -1,0 +1,9 @@
+# Local testing manifest (keep your real App IDs here)
+manifest.local.json
+
+# Packaged manifest zips
+*.zip
+
+# Icon files (placeholders; you can replace with your own)
+color.png
+outline.png

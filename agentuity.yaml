@@ -154,3 +154,6 @@ agents:
   - id: agent_4268cac212e32dae1f6a7c394d2c6b9d
     name: example-llm-judge
     description: Demonstrates LLM-as-a-judge pattern for evaluating AI outputs
+  - id: agent_ebc87cc45db854eff103e3d54cefa24a
+    name: example-teams
+    description: Demonstrates how to integrate with a Microsoft Teams bot

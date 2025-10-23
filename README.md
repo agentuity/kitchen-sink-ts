@@ -94,9 +94,11 @@ Each agent demonstrates specific Agentuity features. Here's what you can explore
 | **example-chat** | Conversational AI with persistent chat history |
 | **example-composio** | Integration with Composio tools (Hacker News) |
 | **example-discord** | Discord webhook notifications |
+| **example-guardrails** | Streaming guardrails with LLM-as-a-judge content moderation |
 | **example-llm-judge** | LLM-as-a-judge pattern for evaluating AI outputs |
 | **example-slack** | Slack bot integration with thread support |
 | **example-streaming** | Real-time data streaming |
+| **example-teams** | Microsoft Teams bot integration with persistent chat history |
 | **example-telegram** | Telegram bot integration |
 
 ## How to Use in DevMode

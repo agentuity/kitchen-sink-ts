@@ -28,9 +28,10 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@agentuity/sdk": "^0.0.147",
+    "@agentuity/sdk": "^0.0.157",
     "@ai-sdk/anthropic": "^2.0.17",
     "@ai-sdk/google": "^2.0.11",
+    "@ai-sdk/groq": "^2.0.24",
     "@ai-sdk/openai": "^2.0.23",
     "@composio/core": "^0.1.52",
     "@composio/vercel": "^0.2.8",
@@ -38,8 +39,10 @@
     "@slack/types": "^2.16.0",
     "@slack/web-api": "^7.10.0",
     "ai": "^5.0.29",
+    "botbuilder": "^4.23.3",
     "crypto": "^1.0.1",
-    "source-map-js": "^1.2.1"
+    "source-map-js": "^1.2.1",
+    "zod": "^4.1.12"
   },
   "module": "index.ts"
 }
