@@ -50,11 +50,11 @@ deployment:
   # You should tune the resources for the deployment
   resources:
     # The memory requirements
-    memory: 2Gi
+    memory: 4Gi
     # The CPU requirements
-    cpu: 2000M
+    cpu: 4000M
     # The disk size requirements
-    disk: 650Mi
+    disk: 3Gi
   # The deployment mode
   mode:
     # on-demand or provisioned
