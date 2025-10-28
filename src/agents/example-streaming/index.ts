@@ -45,7 +45,7 @@ export default async function Agent(
         'Received response from example-chat, starting stream forwarding'
       );
 
-      // Get the stream from the agent's response
+      // Get and forward the stream from the agent's response
       const responseStream = await response.data.stream();
 
       ctx.logger.debug('Stream forwarding initiated successfully');
@@ -88,7 +88,7 @@ export default async function Agent(
       ctx.waitUntil(async () => {
         try {
           const result = streamText({
-            model: openai('gpt-4o-mini'),
+            model: openai('gpt-5-nano'),
             system:
               'You are a technical writer creating executive summaries. Write in a professional, detailed style.',
             prompt: `Based on this company information, write a detailed executive summary (4-5 paragraphs) covering:\n1. Overview and core value proposition\n2. Key features and capabilities\n3. Benefits for developers and teams\n4. Target users and use cases\n5. Unique advantages\n\nCompany Information:\n${companyInfo}`,
@@ -100,8 +100,7 @@ export default async function Agent(
           ctx.logger.info('LLM streaming completed');
         } catch (error) {
           ctx.logger.error('Error in LLM streaming:', error);
-          // Close the stream even if there's an error
-          await stream.close();
+          // Note: pipeTo automatically closes/aborts the stream, no need to close manually
         }
       });
 
@@ -143,13 +142,34 @@ export default async function Agent(
         },
       }));
 
-      // Create a stream with compression enabled
-      const stream = await ctx.stream.create('batch-processing', {
+      // Create a demo stream to show stream deletion
+      const demoStream = await ctx.stream.create('batch-processing', {
         contentType: 'application/json',
-        compress: true, // Enable automatic gzip compression
         metadata: {
           type: 'batch-processing',
-          batchSize: String(batchSize),
+          purpose: 'demo',
+          startTime: new Date(Date.now() - 600000).toISOString(), // 10 minutes ago
+        },
+      });
+
+      ctx.logger.info('Created demo stream for deletion');
+
+      // Write some sample data and close it
+      await demoStream.write(
+        JSON.stringify({ demo: true, message: 'This stream will be deleted' }) +
+          '\n'
+      );
+      await demoStream.close();
+
+      // Create another stream
+      const stream = await ctx.stream.create('batch-processing', {
+        contentType: 'application/json',
+        // Optionally, enable automatic gzip compression: `compress: true,`
+        metadata: {
+          // Metadata: organize streams by purpose, timestamps (for TTL-based cleanup), user IDs, etc.
+          type: 'batch-processing',
+          purpose: 'production',
+          batchSize: String(batchSize), // Metadata values must be strings
           startTime: new Date().toISOString(),
           requestId: ctx.sessionId,
         },
@@ -176,8 +196,8 @@ export default async function Agent(
               processedAt: new Date().toISOString(),
             };
 
-            // Use stream.write() directly - no writer management needed
-            // The SDK handles writer acquisition and locking automatically
+            // Use `stream.write()` directly
+            // The SDK handles writer management (acquisition and locking) automatically
             await stream.write(`${JSON.stringify(processedItem)}\n`);
 
             // Simulate processing time (100-300ms per item, avg 200ms)
@@ -202,6 +222,32 @@ export default async function Agent(
         }
       });
 
+      // Demonstrate stream listing and deletion
+      const allStreams = await ctx.stream.list({
+        name: 'batch-processing',
+      });
+
+      ctx.logger.info(`Found ${allStreams.total} batch-processing stream(s)`);
+
+      // Find and delete the demo stream (client-side filtering)
+      // Alternatively, you could use server-side filtering: `metadata: { purpose: 'demo' }`
+      const demoStreams = allStreams.streams.filter(
+        (s) => s.metadata?.purpose === 'demo'
+      );
+
+      for (const demo of demoStreams) {
+        await ctx.stream.delete(demo.id);
+        ctx.logger.info(
+          `Deleted demo stream: ${demo.id} (${demo.sizeBytes} bytes)`
+        );
+      }
+
+      if (demoStreams.length > 0) {
+        ctx.logger.info(
+          `Cleanup complete: deleted ${demoStreams.length} demo stream(s)`
+        );
+      }
+
       // Return stream info immediately (non-blocking)
       return resp.json({
         streamId: stream.id,
@@ -210,7 +256,7 @@ export default async function Agent(
         compressed: stream.compressed,
         itemCount: batchSize,
         message:
-          'Batch processing started with compression. Stream URL can be consumed multiple times. To verify compression: curl -I [stream-url] (look for the content-encoding: gzip header).',
+          'Batch processing started. Demo stream created and deleted to showcase stream management. Access the stream URL to see processing results.',
       });
     } catch (error) {
       ctx.logger.error('Error in batch processing:', error);

@@ -1,5 +1,5 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
-import { handleError, handleHelpMessage } from '../../lib/utils';
+import { handleError, handleHelpMessage } from '../../lib/utils'; // TODO: add handleSuccess here when SDK method is available
 
 export default async function Agent(
   req: AgentRequest,
@@ -52,6 +52,10 @@ ${textBody}`,
 <h3>Your message:</h3>
 <blockquote>${htmlBody || `<pre>${textBody}</pre>`}</blockquote>`,
       });
+
+      // TODO: Ping Checkly on successful email processing (blocked by missing SDK method)
+      // NOTE: This works for ANY email received (manual or automated)
+      // await handleSuccess(ctx, 'io-email', process.env.CHECKLY_IO_EMAIL_URL);
 
       return resp.text('Email processed and reply sent');
     }

@@ -4,7 +4,7 @@ import type {
   AgentResponse,
   AgentResponseData,
 } from '@agentuity/sdk';
-import type { GenericMessageEvent } from '@slack/types';
+import type { AppMentionEvent, GenericMessageEvent } from '@slack/types';
 import crypto from 'crypto';
 
 // Agentuity request morphs the request data, so we need to type it correctly
@@ -13,6 +13,8 @@ export type SlackAgentRequest = AgentRequest & {
     headers: {
       'x-slack-signature'?: string;
       'x-slack-request-timestamp'?: string;
+      'x-slack-retry-num'?: string;
+      'x-slack-retry-reason'?: string;
       [key: string]: string | undefined;
     };
   };
@@ -70,7 +72,7 @@ export async function verifySlackWebhook(
     const eventData = body as {
       type?: string;
       challenge?: string;
-      event?: GenericMessageEvent;
+      event?: GenericMessageEvent | AppMentionEvent;
     };
 
     // Handle Slack challenge verification
@@ -99,12 +101,12 @@ export async function verifySlackWebhook(
       return resp.empty();
     }
 
-    // Check if the event is a message as opposed to something like a reaction
-    if (
-      eventData.event.type !== 'message' ||
-      typeof eventData.event.subtype !== 'undefined'
-    ) {
-      ctx.logger.debug('Not a message');
+    // Check if the event is an app_mention
+    if (eventData.event.type !== 'app_mention') {
+      ctx.logger.info('Not an app_mention event, ignoring', {
+        eventType: eventData.event.type,
+        eventId: eventData.event.event_ts,
+      });
 
       return resp.empty();
     }

@@ -112,3 +112,40 @@ export const handleError = (agent: string, prompt?: number) => {
     })
     .catch((error) => console.error('Error sending Slack message:', error));
 };
+
+export const handleSuccess = async (
+  ctx: AgentContext,
+  source: string,
+  heartbeatUrl?: string
+) => {
+  if (!heartbeatUrl) {
+    const error = `No heartbeat URL configured for ${source}`;
+    ctx.logger.error(error);
+    throw new Error(error);
+  }
+
+  try {
+    const response = await fetch(heartbeatUrl, {
+      method: 'GET',
+      headers: { Origin: source },
+      signal: AbortSignal.timeout(5000), // 5 second timeout
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Heartbeat ping returned status ${response.status} for ${source}. Checkly URL: ${heartbeatUrl}`
+      );
+    }
+  } catch (error) {
+    const errorName = error instanceof Error ? error.name : 'Unknown';
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorName === 'TimeoutError' || errorName === 'AbortError') {
+      throw new Error(
+        `Heartbeat request timed out for ${source} after 5 seconds`
+      );
+    }
+
+    throw new Error(`Heartbeat request failed for ${source}: ${errorMessage}`);
+  }
+};

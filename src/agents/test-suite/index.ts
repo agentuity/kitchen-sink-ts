@@ -1,9 +1,11 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
 import { WebClient } from '@slack/web-api';
-import { handleError } from '../../lib/utils';
+import { handleError, handleSuccess } from '../../lib/utils';
 import { welcome as welcomeExampleChat } from '../example-chat';
 import { welcome as welcomeExampleComposio } from '../example-composio';
 import { welcome as welcomeExampleDiscord } from '../example-discord';
+import { welcome as welcomeExampleLLMJudge } from '../example-llm-judge';
+import { welcome as welcomeExampleStreaming } from '../example-streaming';
 import { welcome as welcomeFrameworksProvider } from '../frameworks-provider';
 import { welcome as welcomeGatewayByoToken } from '../gateway-byo-token';
 import { welcome as welcomeGatewayProvider } from '../gateway-provider';
@@ -50,6 +52,8 @@ export default async function Agent(
     { name: 'example-chat', welcome: welcomeExampleChat },
     { name: 'example-composio', welcome: welcomeExampleComposio },
     { name: 'example-discord', welcome: welcomeExampleDiscord },
+    { name: 'example-llm-judge', welcome: welcomeExampleLLMJudge },
+    { name: 'example-streaming', welcome: welcomeExampleStreaming },
     { name: 'frameworks-provider', welcome: welcomeFrameworksProvider },
     { name: 'gateway-byo-token', welcome: welcomeGatewayByoToken },
     { name: 'gateway-provider', welcome: welcomeGatewayProvider },
@@ -67,8 +71,6 @@ export default async function Agent(
     // { name: 'example-slack', welcome: welcomeExampleSlack },
     // { name: 'example-teams', welcome: welcomeExampleTeams },
     // { name: 'example-telegram', welcome: welcomeExampleTelegram },
-    // { name: 'example-llm-judge', welcome: welcomeExampleLLMJudge },
-    // { name: 'example-streaming', welcome: welcomeExampleStreaming },
     // { name: 'io-cron', welcome: welcomeIOCron },
     // { name: 'io-email', welcome: welcomeIOEmail },
     // { name: 'io-sms', welcome: welcomeIOSMS },
@@ -110,22 +112,40 @@ export default async function Agent(
     // example-telegram
     // Telegram bots cannot initiate conversations and the agent filters bot messages; nothing to do here
 
-    // example-llm-judge
-    // This agent simply extends the gateway-provider agent to show the LLM-as-a-judge pattern; nothing to do here
-
     // example-slack
     const slack = new WebClient(process.env.SLACK_USER_TOKEN);
 
-    slack.chat.postMessage({
+    await slack.chat.postMessage({
       channel: process.env.SLACK_CHANNEL_TEST || '',
       text: `Daily test message to <@${process.env.SLACK_BOT_ID}>. Please respond with a simple "Hello" to confirm you're working.`,
     });
 
-    // Tests complete
-    slack.chat.postMessage({
-      channel: process.env.SLACK_CHANNEL_ALERTS || '',
-      text: `✅ Kitchen Sink test suite completed successfully.`,
-    });
+    // example-teams - Proactive messaging
+    try {
+      const teamsUserKey = process.env.TEAMS_TEST_USER_KEY;
+
+      if (teamsUserKey) {
+        ctx.logger.info('Testing example-teams proactive messaging');
+
+        const teamsAgent = await ctx.getAgent({ name: 'example-teams' });
+
+        await teamsAgent.run({
+          data: JSON.stringify({
+            userKey: teamsUserKey,
+            text: 'Daily test message from test-suite. Automated testing is working!',
+          }),
+          contentType: 'application/json',
+        });
+      } else {
+        ctx.logger.warn('TEAMS_TEST_USER_KEY not set, skipping Teams test');
+      }
+    } catch (error) {
+      ctx.logger.error('Teams test failed', error);
+      // Don't fail entire test suite if Teams test fails
+    }
+
+    // Tests complete - ping Checkly on success
+    await handleSuccess(ctx, 'test-suite', process.env.CHECKLY_TEST_SUITE_URL);
 
     ctx.logger.info('Test completed successfully');
 

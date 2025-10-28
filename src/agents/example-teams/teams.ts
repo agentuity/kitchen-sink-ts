@@ -7,6 +7,7 @@ import {
 import type { AgentRequest, AgentResponse, AgentContext } from '@agentuity/sdk';
 import { z } from 'zod';
 import crypto from 'crypto';
+import { handleSuccess } from '../../lib/utils';
 
 // Conversation history type for KV storage
 export type MessageHistory = Array<{
@@ -121,7 +122,7 @@ export async function handleProactiveMessage(
         {
           error: 'Conversation reference not found',
           userKey,
-          hint: 'Send a message to the bot in Teams to initialize the conversation reference, then retry.',
+          hint: 'Send a message to the bot in Teams to initialize/refresh the conversation reference (30-day TTL), then retry.',
         },
         { status: 404 }
       );
@@ -129,7 +130,7 @@ export async function handleProactiveMessage(
 
     const data =
       (await refResult.data.json()) as unknown as ConversationReferenceData;
-    const { reference, fullUserId, userName } = data;
+    const { reference, userName } = data;
 
     // Verify botAppId is configured
     const botAppId = process.env.TEAMS_BOT_APP_ID;
@@ -149,10 +150,14 @@ export async function handleProactiveMessage(
 
     ctx.logger.info('Proactive message sent successfully', {
       userKey,
-      fullUserId,
-      userName,
-      messageLength: text.length,
     });
+
+    // Ping Checkly on success
+    await handleSuccess(
+      ctx,
+      'example-teams',
+      process.env.CHECKLY_EXAMPLE_TEAMS_URL
+    );
 
     return resp.json({
       success: true,

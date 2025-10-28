@@ -23,7 +23,7 @@ export default async function Agent(
     const headers = req.metadata.headers as Record<string, string> | undefined;
     const authHeader = headers?.authorization;
 
-    // No auth header = proactive message request (curl/webhook)
+    // No auth header = proactive message request (curl/webhook/agent call)
     // Has auth header = Teams activity (normal conversation)
     if (!authHeader) {
       return handleProactiveMessage(req, resp, ctx);
@@ -51,11 +51,9 @@ export default async function Agent(
     const activity = parseResult.data as unknown as Activity;
     // Without the Zod validation: activity = (await req.data.json()) as unknown as Activity
 
-    ctx.logger.info('Processing activity', {
+    ctx.logger.info('Processing Teams activity', {
       type: activity.type,
-      id: activity.id,
       from: activity.from?.name,
-      conversationId: activity.conversation?.id,
     });
 
     /*
@@ -72,10 +70,6 @@ export default async function Agent(
       authHeader,
       activity,
       async (turnContext: TurnContext) => {
-        ctx.logger.info('Bot logic executing', {
-          activityType: turnContext.activity.type,
-        });
-
         // Handle incoming messages to the Teams bot
         if (turnContext.activity.type === 'message') {
           const userId = turnContext.activity.from.id;
@@ -152,23 +146,31 @@ export default async function Agent(
                 lastUpdated: Date.now(),
               };
 
+              // Check if this is a new reference
+              const existingRef = await ctx.kv.get(
+                'teams-chats',
+                `ref-${userKey}`
+              );
+              const isNewUser = !existingRef.exists;
+
               await ctx.kv.set('teams-chats', `ref-${userKey}`, refData, {
                 ttl: 86400 * 30, // 30 days
               });
 
-              ctx.logger.info('Conversation reference stored', {
-                userName: refData.userName,
-                userKey: userKey,
-                fullUserId: userId,
-                note: 'Use userKey in curl commands for proactive messaging',
-              });
+              // Only log for new users
+              if (isNewUser) {
+                ctx.logger.info('Conversation reference stored (new user)', {
+                  userName: refData.userName,
+                  userKey: userKey,
+                  note: 'Use userKey in curl commands for proactive messaging',
+                });
+              }
             } catch (error) {
               ctx.logger.error('Error storing conversation reference:', error);
               // Non-critical - don't fail the request
             }
 
             ctx.logger.info('AI response sent', {
-              userId,
               messageCount: messages.length,
             });
           } catch (error) {
@@ -178,6 +180,8 @@ export default async function Agent(
             );
           }
         } else if (turnContext.activity.type === 'conversationUpdate') {
+          // Set up a welcome message (first time the bot is added, new member joins, etc.)
+          // This is also shown in the "Test in Web Chat" feature
           const membersAdded = turnContext.activity.membersAdded || [];
           for (const member of membersAdded) {
             if (member.id !== turnContext.activity.recipient.id) {
@@ -194,7 +198,6 @@ export default async function Agent(
       }
     );
 
-    ctx.logger.info('Request processed successfully');
     return resp.text('', { status: 200 });
   } catch (error) {
     const err = error as Error;

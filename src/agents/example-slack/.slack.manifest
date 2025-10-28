@@ -21,8 +21,7 @@
         "event_subscriptions": {
             "request_url": "{AGENT IO API ENDPOINT URL}",
             "bot_events": [
-                "app_mention",
-                "message.channels"
+                "app_mention"
             ]
         },
         "org_deploy_enabled": false,

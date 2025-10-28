@@ -71,18 +71,10 @@ Finally, provide a verdict declaring which story is better and why (2-3 sentence
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">LLM-as-a-Judge</span> example agent.\n\n### About\n\nThis agent demonstrates the LLM-as-a-judge pattern, where one AI model evaluates the outputs of other models. It generates content using the gateway-provider agent (which uses two different AI models), then evaluates both outputs with structured scoring and feedback.\n\n### Testing\n\nSend a story prompt and watch as the agent generates two versions, then provides an evaluation comparing creativity, quality, and strengths of each story.\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a specific example demonstration.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">LLM-as-a-Judge</span> example agent.\n\n### About\n\nThis agent demonstrates the LLM-as-a-judge pattern, where one AI model evaluates the outputs of other models. It generates content using the gateway-provider agent (which uses two different AI models), then evaluates both outputs with structured scoring and feedback.\n\n### Testing\n\nTry the default prompt about AI learning to paint, or send your own story prompt. The agent calls \`gateway-provider\` to generate two stories (one from each AI model), then provides an evaluation comparing their creativity, quality, and strengths.\n\n### Questions?\n\nThe "Help" command is not available for this agent, as it's a specific example demonstration.`,
     prompts: [
       {
         data: 'Write a short story about an AI learning to paint',
-        contentType: 'text/plain',
-      },
-      {
-        data: 'Create a tale about a time-traveling detective',
-        contentType: 'text/plain',
-      },
-      {
-        data: 'Tell a story about the last bookstore on Earth',
         contentType: 'text/plain',
       },
     ],

@@ -21,7 +21,7 @@ export default async function Agent(
    * Examples *
    ************/
 
-  const bucket = 'kitchen-sink'; // You must create the bucket and select a provider first
+  const bucket = 'kitchen-sink'; // Buckets are auto-created if they don't exist
   const key = `storage-object-store-${Date.now()}`;
   const prompt = await req.data.text();
 
@@ -41,7 +41,7 @@ export default async function Agent(
         });
       } catch (_error) {
         return resp.text(
-          'Make sure you have created the bucket and selected a provider first.'
+          'Unable to store data. Please verify your storage provider is configured. You can view object storage buckets under Infrastructure → Object Storage.'
         );
       }
 
@@ -76,7 +76,7 @@ export default async function Agent(
         });
       } catch (_error) {
         return resp.text(
-          'Make sure you have created the bucket and selected a provider first.'
+          'Unable to store data. Please verify your storage provider is configured. You can view object storage buckets under Infrastructure → Object Storage.'
         );
       }
 
@@ -116,19 +116,25 @@ export default async function Agent(
         );
       } catch (_error) {
         return resp.text(
-          'Make sure you have created the bucket and selected a provider first.'
+          'Unable to store data. Please verify your storage provider is configured. You can view object storage buckets under Infrastructure → Object Storage.'
         );
       }
 
-      const publicUrl = await ctx.objectstore.createPublicURL(
-        bucket,
-        key,
-        60 * 1000 // 1 minute, optional, defaults to 1 hour
-      );
+      try {
+        const publicUrl = await ctx.objectstore.createPublicURL(
+          bucket,
+          key,
+          60 * 1000 // 1 minute, optional, defaults to 1 hour
+        );
 
-      return resp.markdown(
-        `You can access the markdown file via this link for the next minute:\n\n${publicUrl}`
-      );
+        return resp.markdown(
+          `You can access the markdown file via this link for the next minute:\n\n${publicUrl}`
+        );
+      } catch (_error) {
+        return resp.text(
+          'Data stored successfully, but unable to create a public URL.'
+        );
+      }
     } catch (error) {
       ctx.logger.error('Error running agent:', error);
 

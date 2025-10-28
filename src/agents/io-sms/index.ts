@@ -35,6 +35,10 @@ export default async function Agent(
         `You sent an SMS with the following message:\n\n"${message}"\n\nFrom: ${phoneNumber}`
       );
 
+      // TODO: Enable Checkly monitoring once `ctx.sendSMS()` SDK method is available
+      // This allows test-suite to trigger io-sms agent for automated testing:
+      // await handleSuccess(ctx, 'io-sms', process.env.CHECKLY_IO_SMS_URL);
+
       return resp.text('SMS processed and reply sent');
     }
   } catch (error) {

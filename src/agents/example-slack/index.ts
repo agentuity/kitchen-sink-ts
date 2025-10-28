@@ -1,13 +1,13 @@
 import type { AgentContext, AgentRequest, AgentResponse } from '@agentuity/sdk';
-import { openai } from '@ai-sdk/openai';
-import type { GenericMessageEvent } from '@slack/types';
+import { groq } from '@ai-sdk/groq';
+import type { AppMentionEvent, GenericMessageEvent } from '@slack/types';
 import { WebClient } from '@slack/web-api';
 import {
   type AssistantModelMessage,
   generateText,
   type UserModelMessage,
 } from 'ai';
-import { handleError } from '../../lib/utils';
+import { handleError, handleSuccess } from '../../lib/utils';
 import type { SlackAgentRequest } from './slack';
 import { verifySlackWebhook } from './slack';
 
@@ -26,6 +26,20 @@ export default async function Agent(
   ctx: AgentContext
 ) {
   try {
+    // Ignore Slack retry attempts to prevent duplicate processing
+    const retryNum = (req as SlackAgentRequest).metadata.headers[
+      'x-slack-retry-num'
+    ];
+    if (retryNum) {
+      ctx.logger.info('Ignoring Slack retry attempt', {
+        retryNum,
+        retryReason: (req as SlackAgentRequest).metadata.headers[
+          'x-slack-retry-reason'
+        ],
+      });
+      return resp.text('OK');
+    }
+
     // No manual trigger handling
     if (req.trigger === 'manual') {
       return resp.text('This agent only responds to Slack triggers.');
@@ -42,16 +56,19 @@ export default async function Agent(
       return verificationResponse;
     }
 
-    const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
-    const { event } = await req.data.object<{ event: GenericMessageEvent }>();
+    const { event } = await req.data.object<{
+      event: GenericMessageEvent | AppMentionEvent;
+    }>();
     const threadTs = event.thread_ts ?? event.ts; // Acts as the UUID for the conversation
 
     // Slack wants a fast 200 OK response, so we return that immediately
     const response = resp.text('OK');
 
-    //Use waitUntil to proccess message in the background
+    // Use waitUntil to process message in the background
     ctx.waitUntil(async () => {
       try {
+        const slack = new WebClient(process.env.SLACK_BOT_TOKEN);
+
         // Build conversation history from Slack thread
         const messages: Message[] = [];
 
@@ -83,7 +100,8 @@ export default async function Agent(
 
         // Generate a reply
         const result = await generateText({
-          model: openai('gpt-5-mini'),
+          // Groq is ideal for fast responses
+          model: groq('openai/gpt-oss-20b'),
           system: `You are a helpful Slack bot assistant that can have a conversation with the user. Try to limit your response length.`,
           messages,
         });
@@ -94,6 +112,13 @@ export default async function Agent(
           thread_ts: threadTs,
           text: result.text,
         });
+
+        // Ping Checkly on success
+        await handleSuccess(
+          ctx,
+          'example-slack',
+          process.env.CHECKLY_EXAMPLE_SLACK_URL
+        );
       } catch (error) {
         ctx.logger.error('Error processing Slack message:', error);
         handleError('example-slack'); // Used for Kitchen Sink testing purposes
