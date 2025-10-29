@@ -57,7 +57,7 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Observability Logging</span> example agent.\n\n### About\n\nLogging provides structured, real-time insights into your agent's execution. Use different log levels to categorize messages and include context for easier debugging.\n\n### Testing\n\nSend a plain-text or JSON message and we'll log it at various levels. Check your Agentuity logs below to see the output.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Observability Logging</span> example agent.\n\n### About\n\nLogging provides structured, real-time insights into your agent's execution. Use different log levels to categorize messages and include context for easier debugging.\n\n### Testing\n\nSend a plain-text or JSON message and we'll log it at various levels. Check your Agentuity logs below to see the output.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.\n\n### Learn More\n\nCheck out our [Agent Logging Guide](https://agentuity.dev/Guides/agent-logging) for more info and best practices.`,
     prompts: [
       {
         data: `Testing agent logging`,

@@ -16,8 +16,6 @@ export default async function Agent(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
-  ctx.logger.info('Teams bot request received');
-
   try {
     // Get the Authorization header
     const headers = req.metadata.headers as Record<string, string> | undefined;

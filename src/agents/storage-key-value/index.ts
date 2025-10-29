@@ -90,7 +90,7 @@ export default async function Agent(
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Key-Value Store</span> example agent.\n\n### About\n\nKey-value storage is your go-to solution for fast, ephemeral data that agents need to access quickly. Think of it as your agent's short-term memory — perfect for session state, configuration, caching, and temporary data.\n\n### Testing\n\nSend a plain-text or JSON message with any content and we'll store it, retrieve it, delete it, and return the value in a response to you.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Key-Value Store</span> example agent.\n\n### About\n\nKey-value storage is your go-to solution for fast, ephemeral data that agents need to access quickly. Think of it as your agent's short-term memory — perfect for session state, configuration, caching, and temporary data.\n\n### Testing\n\nSend a plain-text or JSON message with any content and we'll store it, retrieve it, delete it, and return the value in a response to you.\n\n### Questions?\n\nYou can type "help" at any time to learn more about the capabilities of this feature, or chat with our expert agent by selecting the <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent.\n\n### Learn More\n\nCheck out our [Key-Value Storage Guide](https://agentuity.dev/Guides/key-value) for more info and best practices.`,
     prompts: [
       {
         data: `Hello, world!`,

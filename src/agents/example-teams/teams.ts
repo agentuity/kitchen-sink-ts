@@ -93,8 +93,6 @@ export async function handleProactiveMessage(
   resp: AgentResponse,
   ctx: AgentContext
 ) {
-  ctx.logger.info('Proactive message request received');
-
   try {
     const { userKey, text } = (await req.data.json()) as {
       userKey: string;

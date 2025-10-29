@@ -15,7 +15,7 @@ import { z } from 'zod';
 
 export const welcome = () => {
   return {
-    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Kitchen Sink</span> project, a showcase of Agentuity's SDK functionality.\n\nSelect an agent to learn more about each feature and test various scenarios. We suggest you follow along with the code for each of the agents to understand how each feature works side-by-side with the requests/responses.\n\nIf this is your first time here, start with the <span style="color: light-dark(#0AA, #0FF);">Handler</span> agents.\n\n### Questions?\n\nYou can come back to this <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent at any time to chat with our expert agent, or find out more about specific features by sending "help" as plain-text to one of the other agents.`,
+    welcome: `Welcome to the <span style="color: light-dark(#0AA, #0FF);">Kitchen Sink</span> project, a showcase of Agentuity's SDK functionality.\n\nSelect an agent to learn more about each feature and test various scenarios. We suggest you follow along with the code for each of the agents to understand how each feature works side-by-side with the requests/responses.\n\nIf this is your first time here, start with the <span style="color: light-dark(#0AA, #0FF);">Handler</span> agents.\n\nWatch the demo: [Kitchen Sink Walkthrough](https://youtu.be/gcxqdMWY-x4)\n\n### Questions?\n\nYou can come back to this <span style="color: light-dark(#0AA, #0FF);">kitchen-sink</span> agent at any time to chat with our expert agent, or find out more about specific features by sending "help" as plain-text to one of the other agents.`,
     prompts: [
       {
         data: `Can you tell me more about...`,
