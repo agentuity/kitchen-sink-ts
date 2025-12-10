@@ -36,7 +36,7 @@ export default async function Agent(
 
     // Google
     const resultGoogle = await generateText({
-      model: google('gemini-2.0-flash-001'),
+      model: google('gemini-2.5-flash'),
       system:
         'You are a fantastic storyteller. Your story should be 50 words or less, in markdown format.',
       prompt,
@@ -47,7 +47,7 @@ export default async function Agent(
       '### OpenAI (GPT-5 Nano)\n\n' +
         resultOpenAI.text +
         '\n\n---\n\n' +
-        '### Google (Gemini 2.0 Flash)\n\n' +
+        '### Google (Gemini 2.5 Flash)\n\n' +
         resultGoogle.text
     );
   } catch (error) {
